@@ -1,75 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKO DIK'S</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#f5f5f5;padding-bottom:90px}
-.header{background:#e60023;color:#fff;padding:15px;border-radius:0 0 20px 20px}
-.header h2{margin:8px 0 2px}.header p{font-size:13px;opacity:.9}
-.search{background:#fff;border-radius:20px;padding:10px 15px;margin-top:12px;display:flex;gap:8px}
-.search input{border:none;outline:none;width:100%}
-.banner{background:#fff;margin:12px;border-radius:15px;padding:15px;display:flex;justify-content:space-between}
-.banner b{color:#e60023}.banner button{background:#e60023;color:#fff;border:none;padding:8px 14px;border-radius:20px}
-.menu{display:flex;justify-content:space-around;background:#fff;margin:0 12px;padding:12px;border-radius:15px;text-align:center;font-size:12px}
-.menu span{font-size:24px}
-.section{padding:12px}
-.card{background:#fff;border-radius:15px;padding:12px;margin-bottom:12px;display:flex;gap:12px;align-items:center}
-.card img{width:70px;height:70px;border-radius:10px;object-fit:cover;background:#eee}
-.card-info{flex:1}.card-info b{font-size:15px}.card-info p{font-size:13px;color:#888}
-.price{color:#e60023;font-weight:bold}
-.add-btn{background:#e60023;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:bold}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:12px;border-top:1px solid #ddd;font-size:12px;text-align:center}
-.cart-bar{position:fixed;bottom:60px;left:12px;right:12px;background:#222;color:#fff;padding:12px;border-radius:15px;display:none;justify-content:space-between;align-items:center}
-.cart-bar button{background:#25D366;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:bold}
-</style>
-</head>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOKO DIK'S</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>body{font-family:sans-serif;margin:0;background:#fff7ed;padding-bottom:80px}.top{background:#dc2626;color:#fff;padding:16px 16px 22px;border-radius:0 0 20px 20px}.top h1{margin:4px 0}.search{background:#fff;border-radius:30px;padding:12px;border:0;width:100%;box-sizing:border-box;margin-top:10px}.promo{background:#fff;margin:14px;border-radius:14px;padding:14px;display:flex;justify-content:space-between;align-items:center}.promo b{color:#dc2626;font-size:18px}.promo button{background:#dc2626;color:#fff;border:0;padding:10px 18px;border-radius:20px}.cat{background:#fff;margin:0 14px;border-radius:14px;padding:12px;display:flex;justify-content:space-around;text-align:center}.cat div{cursor:pointer}.cat .on{color:#dc2626;font-weight:700}.card{background:#fff;margin:12px 14px;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center}.card img{width:90px;height:90px;object-fit:cover;border-radius:10px;background:#ddd}.card .p{color:#dc2626;font-weight:800;font-size:18px}.card button{background:#dc2626;color:#fff;border:0;padding:10px 14px;border-radius:20px;white-space:nowrap}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #eee;text-align:center;font-size:13px}#cartbar{position:fixed;bottom:62px;left:12px;right:12px;background:#111;color:#fff;padding:12px;border-radius:14px;display:none;justify-content:space-between;align-items:center}#cartbar button{background:#22c55e;color:#fff;border:0;padding:8px 12px;border-radius:20px}</style></head>
 <body>
-<div class="header">
-  <div style="display:flex;justify-content:space-between;font-size:13px"><span>📍 Tasikmalaya</span><span>🔔</span></div>
-  <h2>Hai, Selamat Datang!</h2><p>TOKO DIK'S - Serba Ada, Cepat Diantar</p>
-  <div class="search">🔍 <input id="search" placeholder="Cari Mie, Kopi, Gas..." oninput="cari()"></div>
-</div>
-<div class="banner"><div><b>PROMO HARI INI!</b><br><small>Beli Gas + Galon, Antar Gratis!</small></div><button onclick="alert('Promo aktif!')">Lihat</button></div>
-<div class="menu">
-  <div onclick="filterKategori('all')"><span>🛒</span><br>Semua</div>
-  <div onclick="filterKategori('makanan')"><span>🍜</span><br>Makanan</div>
-  <div onclick="filterKategori('minuman')"><span>☕</span><br>Minuman</div>
-  <div onclick="filterKategori('lainnya')"><span>🔥</span><br>Gas & Galon</div>
-</div>
-<div class="section" id="produk"></div>
-<div class="cart-bar" id="cartBar"><span id="cartText">0 item - Rp 0</span><button onclick="checkout()">Checkout WA</button></div>
-<div class="bottom"><div>🏠<br>Beranda</div><div>🛒<br>Belanja</div><div>🎁<br>Promo</div><div onclick="checkout()">📦<br>Pesanan</div><div>👤<br>Akun</div></div>
+<div class="top">📍 Tasikmalaya <span style="float:right">🔔</span><h1>Hai, Selamat Datang!</h1><div>TOKO DIK'S - Serba Ada, Cepat Diantar</div><input class="search" id="q" placeholder="🔍  Cari Mie, Kopi, Gas..." oninput="render()"></div>
+<div class="promo"><div><b>PROMO HARI INI!</b><br>Beli Gas + Galon, Antar Gratis!</div><button>Lihat</button></div>
+<div class="cat"><div onclick="setCat('Semua',this)" class="on">🛒<br>Semua</div><div onclick="setCat('Makanan',this)">🍜<br>Makanan</div><div onclick="setCat('Minuman',this)">☕<br>Minuman</div><div onclick="setCat('Gas',this)">🔥<br>Gas & Galon</div></div>
+<div id="list">Loading dari Firebase...</div>
+<div id="cartbar"><span id="ct">Keranjang: 0 item</span><button onclick="checkout()">Checkout WA</button></div>
+<div class="nav"><div>🏠<br>Beranda</div><div>🛒<br>Belanja</div><div>🎁<br>Promo</div><div>📦<br>Pesanan</div><div>👤<br>Akun</div></div>
 <script>
-let def=[
-{nama:"Mie Instan",harga:3500,kat:"makanan",img:"https://via.placeholder.com/200?text=Mie"},
-{nama:"Kopi Sachet",harga:2000,kat:"minuman",img:"https://via.placeholder.com/200?text=Kopi"},
-{nama:"Rokok",harga:27000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Rokok"},
-{nama:"Gas 3kg",harga:23000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Gas"},
-{nama:"Galon Isi Ulang",harga:22000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Galon"},
-{nama:"Pulsa Listrik",harga:21000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Token"},
-{nama:"Pulsa All Operator",harga:12000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Pulsa"},
-{nama:"Voucher Internet",harga:15000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Voucher"},
-];
-let produk=JSON.parse(localStorage.getItem('tokodiks_produk')||'null')||def;
-let keranjang={};
-function tampil(filter="all",keyword=""){
-let html="";
-produk.forEach((p,i)=>{
-if(filter!=="all"&&p.kat!==filter)return;
-if(keyword&&!p.nama.toLowerCase().includes(keyword.toLowerCase()))return;
-html+=`<div class="card"><img src="${p.img}"><div class="card-info"><b>${p.nama}</b><p>TOKO DIK'S</p><span class="price">Rp ${p.harga.toLocaleString('id-ID')}</span></div><button class="add-btn" onclick="tambah(${i})">+ Tambah</button></div>`;
-});
-document.getElementById('produk').innerHTML=html;
-}
-function tambah(i){keranjang[i]=(keranjang[i]||0)+1;updateCart();}
-function updateCart(){let a=0,b=0;for(let k in keranjang){a+=keranjang[k];b+=keranjang[k]*produk[k].harga;}let bar=document.getElementById('cartBar');if(a>0){bar.style.display="flex";document.getElementById('cartText').innerText=a+" item - Rp "+b.toLocaleString('id-ID');}else bar.style.display="none";}
-function cari(){tampil("all",document.getElementById('search').value);}
-function filterKategori(k){tampil(k);}
-function checkout(){if(Object.keys(keranjang).length===0){alert("Keranjang masih kosong bro!");return;}let pesan="Halo TOKO DIK'S, saya mau pesan:\n";let total=0;for(let k in keranjang){pesan+=`- ${produk[k].nama} x${keranjang[k]} = Rp ${(produk[k].harga*keranjang[k]).toLocaleString('id-ID')}\n`;total+=produk[k].harga*keranjang[k];}pesan+=`Total: Rp ${total.toLocaleString('id-ID')}\nNama:\nAlamat:`;window.open("https://wa.me/6282118115124?text="+encodeURIComponent(pesan),"_blank");}
-tampil();
-</script>
-</body>
-</html>
+const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
+firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
+let produk=[], cart={}, cat="Semua";
+const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan"},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman"},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Semua"}];
+db.collection("toko").doc("produk").onSnapshot(doc=>{ if(doc.exists){produk=doc.data().list;} else {produk=def; db.collection("toko").doc("produk").set({list:def});} render();});
+function setCat(c,el){cat=c; document.querySelectorAll(".cat div").forEach(d=>d.classList.remove("on")); el.classList.add("on"); render();}
+function render(){let q=(document.getElementById("q").value||"").toLowerCase(); let f=produk.filter(p=>{ if(cat!=="Semua" && p.kat!==cat && p.nama!=="Rokok") return false; if(q && !p.nama.toLowerCase().includes(q)) return false; return true;}); document.getElementById("list").innerHTML=f.map(p=>{let i=produk.indexOf(p); return `<div class="card"><img src="${p.img}"><div style="flex:1"><b>${p.nama}</b><div style="color:#888">TOKO DIK'S</div><div class="p">Rp ${p.harga.toLocaleString("id-ID")}</div></div><button onclick="add(${i})">+ Tambah</button></div>`}).join("") || "<p style='text-align:center'>Tidak ketemu</p>";}
+function add(i){cart[i]=(cart[i]||0)+1; let n=Object.values(cart).reduce((a,b)=>a+b,0); document.getElementById("ct").innerText="Keranjang: "+n+" item"; document.getElementById("cartbar").style.display="flex";}
+function checkout(){let t="Halo Toko Diks, saya mau pesan:%0A"; let total=0; for(let i in cart){total+=produk[i].harga*cart[i]; t+=`- ${produk[i].nama} x${cart[i]} = Rp ${(produk[i].harga*cart[i]).toLocaleString("id-ID")}%0A`;} t+=`Total: Rp ${total.toLocaleString("id-ID")}`; window.open("https://wa.me/6281234567890?text="+t);}
+</script></body></html>
