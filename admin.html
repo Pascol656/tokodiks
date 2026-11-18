@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMIN TOKO DIK'S</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f5f5f5;padding:15px;padding-bottom:50px}
+h2{color:#e60023}input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5px 0}
+button{width:100%;padding:12px;background:#e60023;color:#fff;border:none;border-radius:10px;font-weight:bold;margin-top:5px}
+.card{background:#fff;border-radius:15px;padding:12px;margin:12px 0;display:flex;gap:12px}
+.card img{width:80px;height:80px;border-radius:10px;object-fit:cover;background:#eee}
+.info{flex:1}.back{background:#222;margin-top:15px}
+</style>
+</head>
+<body>
+<h2>⚙️ ADMIN TOKO DIK'S</h2>
+<p>Jangan sebar link ini bro, khusus lu doang!</p>
+<div id="list"></div>
+<button class="back" onclick="location.href='index.html'">⬅️ Balik ke Toko</button>
+<script>
+let def=[
+{nama:"Mie Instan",harga:3500,kat:"makanan",img:"https://via.placeholder.com/200?text=Mie"},
+{nama:"Kopi Sachet",harga:2000,kat:"minuman",img:"https://via.placeholder.com/200?text=Kopi"},
+{nama:"Rokok",harga:27000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Rokok"},
+{nama:"Gas 3kg",harga:23000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Gas"},
+{nama:"Galon Isi Ulang",harga:22000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Galon"},
+{nama:"Pulsa Listrik",harga:21000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Token"},
+{nama:"Pulsa All Operator",harga:12000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Pulsa"},
+{nama:"Voucher Internet",harga:15000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Voucher"},
+];
+let produk=JSON.parse(localStorage.getItem('tokodiks_produk')||'null')||def;
+function tampil(){
+let h="";
+produk.forEach((p,i)=>{
+h+=`<div class="card"><img src="${p.img}"><div class="info"><b>${p.nama}</b><br>Harga: Rp ${p.harga.toLocaleString('id-ID')}<br><label>Ganti Harga</label><input type="number" id="h-${i}" value="${p.harga}"><label>Ganti Foto</label><input type="file" accept="image/*" onchange="foto(event,${i})"><button onclick="simpan(${i})">SIMPAN</button></div></div>`;
+});
+document.getElementById('list').innerHTML=h;
+}
+function foto(e,i){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{produk[i].img=x.target.result;document.querySelectorAll('.card img')[i].src=x.target.result};r.readAsDataURL(f);}
+function simpan(i){let v=parseInt(document.getElementById('h-'+i).value);if(v)produk[i].harga=v;localStorage.setItem('tokodiks_produk',JSON.stringify(produk));tampil();alert(produk[i].nama+" BERHASIL DISIMPAN!");}
+tampil();
+</script>
+</body>
+</html>

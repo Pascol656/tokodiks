@@ -5,26 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TOKO DIK'S</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#f5f5f5;padding-bottom:80px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f5f5f5;padding-bottom:90px}
 .header{background:#e60023;color:#fff;padding:15px;border-radius:0 0 20px 20px}
-.header-top{display:flex;justify-content:space-between;font-size:13px}
-.header h2{margin:10px 0 2px}
-.header p{font-size:13px;opacity:.9}
+.header h2{margin:8px 0 2px}.header p{font-size:13px;opacity:.9}
 .search{background:#fff;border-radius:20px;padding:10px 15px;margin-top:12px;display:flex;gap:8px}
 .search input{border:none;outline:none;width:100%}
-.banner{background:#fff;margin:12px;border-radius:15px;padding:15px;display:flex;justify-content:space-between;align-items:center}
-.banner b{color:#e60023}
-.banner button{background:#e60023;color:#fff;border:none;padding:8px 14px;border-radius:20px}
+.banner{background:#fff;margin:12px;border-radius:15px;padding:15px;display:flex;justify-content:space-between}
+.banner b{color:#e60023}.banner button{background:#e60023;color:#fff;border:none;padding:8px 14px;border-radius:20px}
 .menu{display:flex;justify-content:space-around;background:#fff;margin:0 12px;padding:12px;border-radius:15px;text-align:center;font-size:12px}
-.menu div{cursor:pointer}
 .menu span{font-size:24px}
 .section{padding:12px}
 .card{background:#fff;border-radius:15px;padding:12px;margin-bottom:12px;display:flex;gap:12px;align-items:center}
-.card img{width:70px;height:70px;border-radius:10px;object-fit:cover}
-.card-info{flex:1}
-.card-info b{font-size:15px}
-.card-info p{font-size:13px;color:#888}
+.card img{width:70px;height:70px;border-radius:10px;object-fit:cover;background:#eee}
+.card-info{flex:1}.card-info b{font-size:15px}.card-info p{font-size:13px;color:#888}
 .price{color:#e60023;font-weight:bold}
 .add-btn{background:#e60023;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:bold}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:12px;border-top:1px solid #ddd;font-size:12px;text-align:center}
@@ -33,85 +27,48 @@ body{background:#f5f5f5;padding-bottom:80px}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="header-top"><span>📍 Randegan</span><span>🔔</span></div>
-  <h2>Hai, Selamat Datang!</h2>
-  <p>TOKO DIK'S - Serba Ada, Cepat Diantar</p>
+  <div style="display:flex;justify-content:space-between;font-size:13px"><span>📍 Tasikmalaya</span><span>🔔</span></div>
+  <h2>Hai, Selamat Datang!</h2><p>TOKO DIK'S - Serba Ada, Cepat Diantar</p>
   <div class="search">🔍 <input id="search" placeholder="Cari Mie, Kopi, Gas..." oninput="cari()"></div>
 </div>
-
-<div class="banner">
-  <div><b>PROMO HARI INI!</b><br><small>Beli Gas + Galon, Antar Gratis!</small></div>
-  <button onclick="alert('Promo aktif bro!')">Lihat</button>
-</div>
-
+<div class="banner"><div><b>PROMO HARI INI!</b><br><small>Beli Gas + Galon, Antar Gratis!</small></div><button onclick="alert('Promo aktif!')">Lihat</button></div>
 <div class="menu">
   <div onclick="filterKategori('all')"><span>🛒</span><br>Semua</div>
   <div onclick="filterKategori('makanan')"><span>🍜</span><br>Makanan</div>
   <div onclick="filterKategori('minuman')"><span>☕</span><br>Minuman</div>
   <div onclick="filterKategori('lainnya')"><span>🔥</span><br>Gas & Galon</div>
 </div>
-
 <div class="section" id="produk"></div>
-
-<div class="cart-bar" id="cartBar">
-  <span id="cartText">0 item - Rp 0</span>
-  <button onclick="checkout()">Checkout WA</button>
-</div>
-
-<div class="bottom">
-  <div>🏠<br>Beranda</div>
-  <div>🛒<br>Belanja</div>
-  <div>🎁<br>Promo</div>
-  <div onclick="checkout()">📦<br>Pesanan</div>
-  <div>👤<br>Akun</div>
-</div>
-
+<div class="cart-bar" id="cartBar"><span id="cartText">0 item - Rp 0</span><button onclick="checkout()">Checkout WA</button></div>
+<div class="bottom"><div>🏠<br>Beranda</div><div>🛒<br>Belanja</div><div>🎁<br>Promo</div><div onclick="checkout()">📦<br>Pesanan</div><div>👤<br>Akun</div></div>
 <script>
-let produk = [
-  {nama:"Mie Goreng", harga:3500, kat:"makanan", img:"https://via.placeholder.com/70?text=Mie"},
-  {nama:"Kopi Sachet", harga:2000, kat:"minuman", img:"https://via.placeholder.com/70?text=Kopi"},
-  {nama:"Rokok Surya", harga:25000, kat:"lainnya", img:"https://via.placeholder.com/70?text=Rokok"},
-  {nama:"Gas 3kg", harga:22000, kat:"lainnya", img:"https://via.placeholder.com/70?text=Gas"},
-  {nama:"Galon Isi Ulang", harga:20000, kat:"lainnya", img:"https://via.placeholder.com/70?text=Galon"},
+let def=[
+{nama:"Mie Instan",harga:3500,kat:"makanan",img:"https://via.placeholder.com/200?text=Mie"},
+{nama:"Kopi Sachet",harga:2000,kat:"minuman",img:"https://via.placeholder.com/200?text=Kopi"},
+{nama:"Rokok",harga:27000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Rokok"},
+{nama:"Gas 3kg",harga:23000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Gas"},
+{nama:"Galon Isi Ulang",harga:22000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Galon"},
+{nama:"Pulsa Listrik",harga:21000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Token"},
+{nama:"Pulsa All Operator",harga:12000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Pulsa"},
+{nama:"Voucher Internet",harga:15000,kat:"lainnya",img:"https://via.placeholder.com/200?text=Voucher"},
 ];
-let keranjang = {};
-
-function tampil(filter="all", keyword=""){
-  let html="";
-  produk.forEach((p,i)=>{
-    if(filter!=="all" && p.kat!==filter) return;
-    if(keyword && !p.nama.toLowerCase().includes(keyword.toLowerCase())) return;
-    html+=`<div class="card">
-      <img src="${p.img}">
-      <div class="card-info"><b>${p.nama}</b><p>TOKO DIK'S</p><span class="price">Rp ${p.harga.toLocaleString('id-ID')}</span></div>
-      <button class="add-btn" onclick="tambah(${i})">+ Tambah</button>
-    </div>`;
-  });
-  document.getElementById('produk').innerHTML=html;
+let produk=JSON.parse(localStorage.getItem('tokodiks_produk')||'null')||def;
+let keranjang={};
+function tampil(filter="all",keyword=""){
+let html="";
+produk.forEach((p,i)=>{
+if(filter!=="all"&&p.kat!==filter)return;
+if(keyword&&!p.nama.toLowerCase().includes(keyword.toLowerCase()))return;
+html+=`<div class="card"><img src="${p.img}"><div class="card-info"><b>${p.nama}</b><p>TOKO DIK'S</p><span class="price">Rp ${p.harga.toLocaleString('id-ID')}</span></div><button class="add-btn" onclick="tambah(${i})">+ Tambah</button></div>`;
+});
+document.getElementById('produk').innerHTML=html;
 }
-function tambah(i){
-  keranjang[i]=(keranjang[i]||0)+1;
-  updateCart();
-}
-function updateCart(){
-  let totalItem=0, totalHarga=0;
-  for(let k in keranjang){ totalItem+=keranjang[k]; totalHarga+=keranjang[k]*produk[k].harga; }
-  let bar=document.getElementById('cartBar');
-  if(totalItem>0){ bar.style.display="flex"; document.getElementById('cartText').innerText=totalItem+" item - Rp "+totalHarga.toLocaleString('id-ID'); }
-  else bar.style.display="none";
-}
-function cari(){ tampil("all", document.getElementById('search').value); }
-function filterKategori(k){ tampil(k); }
-function checkout(){
-  if(Object.keys(keranjang).length===0){ alert("Keranjang masih kosong bro!"); return; }
-  let pesan="Halo TOKO DIK'S, saya mau pesan:\n";
-  let total=0;
-  for(let k in keranjang){ pesan+=`- ${produk[k].nama} x${keranjang[k]} = Rp ${(produk[k].harga*keranjang[k]).toLocaleString('id-ID')}\n`; total+=produk[k].harga*keranjang[k]; }
-  pesan+=`Total: Rp ${total.toLocaleString('id-ID')}\nNama:\nAlamat:`;
-  window.open("https://wa.me/6282118115124?text="+encodeURIComponent(pesan),"_blank");
-}
+function tambah(i){keranjang[i]=(keranjang[i]||0)+1;updateCart();}
+function updateCart(){let a=0,b=0;for(let k in keranjang){a+=keranjang[k];b+=keranjang[k]*produk[k].harga;}let bar=document.getElementById('cartBar');if(a>0){bar.style.display="flex";document.getElementById('cartText').innerText=a+" item - Rp "+b.toLocaleString('id-ID');}else bar.style.display="none";}
+function cari(){tampil("all",document.getElementById('search').value);}
+function filterKategori(k){tampil(k);}
+function checkout(){if(Object.keys(keranjang).length===0){alert("Keranjang masih kosong bro!");return;}let pesan="Halo TOKO DIK'S, saya mau pesan:\n";let total=0;for(let k in keranjang){pesan+=`- ${produk[k].nama} x${keranjang[k]} = Rp ${(produk[k].harga*keranjang[k]).toLocaleString('id-ID')}\n`;total+=produk[k].harga*keranjang[k];}pesan+=`Total: Rp ${total.toLocaleString('id-ID')}\nNama:\nAlamat:`;window.open("https://wa.me/6282118115124?text="+encodeURIComponent(pesan),"_blank");}
 tampil();
 </script>
 </body>
