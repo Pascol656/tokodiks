@@ -1,15 +1,16 @@
 {
-  "name": "sugan te poho - Kurir",
-  "short_name": "Kurir",
-  "start_url": ".",
+  "name": "Toko Dik's",
+  "short_name": "Toko Dik's",
+  "start_url": "/tokodiks/",
   "display": "standalone",
-  "background_color": "#f0f2f5",
-  "theme_color": "#22c55e",
+  "background_color": "#fff7ed",
+  "theme_color": "#dc2626",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1582/1582813.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/263/263115.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
