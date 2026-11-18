@@ -63,7 +63,7 @@ function checkout(){
  let pesan="Halo Toko Dik's, saya mau pesan:%0A"; let total=0;
  keys.forEach(k=>{ let p=produk[k]; let qty=cart[k]; let sub=p.harga*qty; total+=sub; pesan+=`- ${p.nama} x${qty} = Rp ${sub.toLocaleString("id-ID")}%0A`; });
  pesan+=`Total: Rp ${total.toLocaleString("id-ID")}`;
- window.open("https://wa.me/6281234567890?text="+pesan,"_blank");
+ window.open("https://wa.me/+6282118115124?text="+pesan,"_blank");
 }
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; document.getElementById("installBtn").style.display="block"; });
