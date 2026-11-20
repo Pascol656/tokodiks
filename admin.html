@@ -3,6 +3,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>*{box-sizing:border-box;font-family:Inter,Arial}body{background:#f1f5f9;margin:0;padding:0}
 .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:19px}.header b span{color:#dc2626}.badge{background:#dcfce7;color:#15803d;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.btn-logout{background:#111;color:#fff;border:0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}.btn-pass{background:#f1f5f9;color:#111;border:1px solid #e2e8f0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}
 .wrap{max-width:1200px;margin:0 auto;padding:20px}
 .grid2{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
 .card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -15,14 +16,24 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 .produk-info{display:flex;gap:10px;align-items:center}.produk-info img{width:56px;height:56px;object-fit:cover;border-radius:10px;background:#eee}.produk-info b{font-size:14px}.produk-info small{color:#64748b}
 .harga-input{width:110px!important;margin:0!important}.stok-input{width:70px!important;margin:0!important}
 .foto-label{display:inline-block;background:#f1f5f9;padding:7px 10px;border-radius:8px;font-size:12px;cursor:pointer;border:1px dashed #cbd5e1}
+.login-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.login-box{background:#fff;padding:28px;border-radius:20px;width:100%;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+.popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99;padding:16px;align-items:center;justify-content:center}.popup>div{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px}
 @media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}}
 </style></head><body>
 
-<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><span class="badge" id="status">Menghubungkan...</span></div>
+<!-- LOGIN -->
+<div id="loginBox" class="login-bg"><div class="login-box">
+<div style="font-size:40px">🔒</div><h2 style="margin:8px 0 4px">LOGIN ADMIN</h2><p style="color:#64748b;font-size:13px;margin:0 0 14px">Hanya Pemilik Toko Dik's</p>
+<input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password">
+<button class="btn-merah" onclick="loginAdmin()">MASUK</button>
+<p id="pesanLogin" style="color:#dc2626;font-size:13px"></p>
+<p style="font-size:11px;color:#94a3b8">Username: diks / Password: diks12345 (kalo belum diganti)</p></div></div>
+
+<!-- ISI ADMIN -->
+<div id="isiAdmin" style="display:none">
+<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center"><span class="badge" id="status">Menghubungkan...</span><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
 
 <div class="wrap"><div class="grid2">
-
-<!-- KIRI -->
 <div>
 <div class="card"><h3>➕ Tambah Barang</h3>
 <input id="namaBaru" placeholder="Nama barang">
@@ -31,20 +42,47 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 <select id="katPilih"></select>
 <input id="fotoBaru" placeholder="Link foto (opsional)">
 <button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
-
 <div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div>
 </div>
 
-<!-- KANAN - TABEL -->
 <div class="card" style="padding:0;overflow:hidden">
 <div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div>
 <table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table>
 <p style="text-align:center;color:#94a3b8;font-size:12px;padding:4px">Ketik harga / stok langsung di tabel, lalu klik SIMPAN</p>
 </div>
-
 </div></div>
+</div>
+
+<!-- POPUP GANTI PASSWORD -->
+<div class="popup" id="popPass"><div><h3 style="margin:0">🔑 Ganti Password</h3><p style="font-size:12px;color:#64748b">Password baru langsung kepake buat login selanjutnya!</p>
+<input id="passLama" type="password" placeholder="Password lama">
+<input id="passBaru" type="password" placeholder="Password baru, contoh: diks2026">
+<input id="passBaru2" type="password" placeholder="Ulangi password baru">
+<div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN PASSWORD</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div>
+<p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
 
 <script>
+// LOGIN + GANTI PASSWORD - PASSWORD DISIMPAN DI HP/LAPTOP LU, JADI BISA DIGANTI SESUKA HATI
+const USER_BENAR="diks";
+function getPass(){ return localStorage.getItem("passAdminDiks") || "diks12345"; }
+function cekLogin(){ if(localStorage.getItem("loginAdminDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";} }
+cekLogin();
+function loginAdmin(){let u=document.getElementById("user").value;let p=document.getElementById("pass").value;if(u===USER_BENAR && p===getPass()){localStorage.setItem("loginAdminDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}else{document.getElementById("pesanLogin").innerText="Username / Password salah!";}}
+function logoutAdmin(){localStorage.removeItem("loginAdminDiks");location.reload();}
+function bukaGantiPass(){document.getElementById("popPass").style.display="flex";document.getElementById("pesanPass").innerText="";}
+function tutupPass(){document.getElementById("popPass").style.display="none";}
+function simpanPassBaru(){
+  let lama=document.getElementById("passLama").value;
+  let baru=document.getElementById("passBaru").value;
+  let baru2=document.getElementById("passBaru2").value;
+  if(lama!==getPass()){document.getElementById("pesanPass").innerText="Password lama salah!";return;}
+  if(baru.length<4){document.getElementById("pesanPass").innerText="Password baru minimal 4 huruf!";return;}
+  if(baru!==baru2){document.getElementById("pesanPass").innerText="Password baru gak sama, cek lagi!";return;}
+  localStorage.setItem("passAdminDiks",baru);
+  alert("BERHASIL! Password baru lu: "+baru+" - Inget ya, jangan sampe lupa!");
+  tutupPass();
+}
+
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
 let produk=[]; let kategori=["Makanan","Minuman","Rokok","Sembako"];
