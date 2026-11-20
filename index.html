@@ -1,75 +1,74 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Toko Dik's - Serba Ada</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#dc2626">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/263/263115.png">
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>TOKO DIK'S</title>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#e60023">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<style>
-*{box-sizing:border-box}body{font-family:sans-serif;margin:0;background:#fff7ed;padding-bottom:120px}
-header{background:#dc2626;color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}
-header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:13px;opacity:.9}
-#installBtn{display:none;background:#111;color:#fff;border:0;padding:12px 16px;border-radius:999px;font-weight:700;width:calc(100% - 24px);margin:12px auto 0}
-.wrap{padding:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.card img{width:100%;height:130px;object-fit:cover;background:#eee}
-.card .info{padding:10px}
-.card b{font-size:14px;display:block;min-height:34px}
-.card .harga{color:#dc2626;font-weight:800;margin:6px 0}
-.card button{width:100%;background:#dc2626;color:#fff;border:0;padding:9px;border-radius:10px;font-weight:700}
-#cartBar{position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:14px;display:flex;justify-content:space-between;align-items:center}
-#cartBar button{background:#22c55e;color:#fff;border:0;padding:10px 16px;border-radius:10px;font-weight:800}
-#search{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin-bottom:12px}
-</style>
-</head>
-<body>
-<header><h1>🛒 TOKO DIK'S</h1><p>Serba Ada - Cepat Diantar - Tasikmalaya</p><button id="installBtn">⬇️ INSTALL APLIKASI TOKO DIK'S</button></header>
-<div class="wrap"><input id="search" placeholder="Cari Mie, Kopi, Rokok, Gas..." oninput="render()"><div id="grid" class="grid"></div><p style="text-align:center;color:#888;font-size:12px">Mau order? Pilih barang, klik Pesan via WA</p></div>
-<div id="cartBar"><span id="cartText">🛒 Keranjang: 0 barang</span><button onclick="checkout()">Pesan via WA</button></div>
+<style>*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#fff5eb;padding-bottom:90px}.header{background:#e60023;color:#fff;text-align:center;padding:16px}.header h1{margin:0}.header p{margin:4px 0 0;font-size:13px}.search{margin:12px;padding:0 12px}.search input{width:100%;padding:13px;border:1px solid #ddd;border-radius:15px;font-size:15px}.kat{display:flex;gap:8px;overflow:auto;padding:0 12px 12px}.kat button{white-space:nowrap;border:0;background:#fff;padding:8px 14px;border-radius:20px}.kat button.on{background:#e60023;color:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 12px}.card{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.08)}.card img{width:100%;height:140px;object-fit:cover;background:#ddd}.card-body{padding:10px}.price{color:#e60023;font-weight:800;font-size:18px;margin:6px 0}.add{background:#e60023;color:#fff;border:0;width:100%;padding:10px;border-radius:10px;font-weight:800}.cart{position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center;z-index:99}.cart button{background:#25D366;color:#fff;border:0;padding:10px 16px;border-radius:12px;font-weight:800}.popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;padding:20px}.popup>div{background:#fff;border-radius:16px;padding:16px;max-height:80vh;overflow:auto}</style></head><body>
+
+<div class="header"><h1>🛒 TOKO DIK'S</h1><p id="status">Menghubungkan...</p><p>Serba Ada - Cepat Diantar - Tasikmalaya</p></div>
+<div class="search"><input id="search" placeholder="Cari Mie, Kopi, Rokok, Gas..." oninput="tampil()"></div>
+<div class="kat" id="listKat"></div>
+<div class="grid" id="produk">Memuat produk...</div>
+
+<div class="cart"><span id="cartText">🛒 Keranjang: 0 barang</span><button onclick="bukaKeranjang()">Lihat Keranjang</button></div>
+
+<div class="popup" id="popupKeranjang"><div><h3>🛒 Keranjang Kamu <button onclick="tutupKeranjang()" style="float:right">X</button></h3><div id="isiKeranjang"></div><div style="display:flex;gap:8px;margin-top:12px"><button onclick="batalSemua()" style="background:#fee;color:#dc2626;flex:1;padding:12px;border:0;border-radius:10px;font-weight:800">Batalin Semua</button><button onclick="checkout()" style="background:#25D366;color:#fff;flex:1;padding:12px;border:0;border-radius:10px;font-weight:800">Checkout WA</button></div></div></div>
+
 <script>
+// KUNCI SAMA PERSIS KAYAK ADMIN LU
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let produk=[
-{nama:"Mie Instan",harga:2000,img:"https://via.placeholder.com/400x300?text=Mie"},
-{nama:"Kopi",harga:4000,img:"https://via.placeholder.com/400x300?text=Kopi"},
-{nama:"Rokok",harga:27000,img:"https://via.placeholder.com/400x300?text=Rokok"},
-{nama:"Gas LPG 3Kg",harga:25000,img:"https://via.placeholder.com/400x300?text=Gas"},
-{nama:"Galon Air",harga:20000,img:"https://via.placeholder.com/400x300?text=Galon"},
-{nama:"Beras 5Kg",harga:65000,img:"https://via.placeholder.com/400x300?text=Beras"}
-];
-let cart={};
-db.collection("toko").doc("produk").onSnapshot(doc=>{ if(doc.exists && doc.data().list){ produk=doc.data().list; } render(); });
-function render(){
- let q=document.getElementById("search").value.toLowerCase();
- let list=produk.filter(p=>p.nama.toLowerCase().includes(q));
- document.getElementById("grid").innerHTML=list.map((p,i)=>{
-  let idx=produk.indexOf(p);
-  return `<div class="card"><img src="${p.img}"><div class="info"><b>${p.nama}</b><div class="harga">Rp ${p.harga.toLocaleString("id-ID")}</div><button onclick="add(${idx})">+ Tambah</button></div></div>`;
- }).join("");
- let totalQty=Object.values(cart).reduce((a,b)=>a+b,0);
- document.getElementById("cartText").innerText="🛒 Keranjang: "+totalQty+" barang";
+
+let produk=[]; let katAktif="Semua"; let keranjang={};
+let kategori=["Semua"];
+
+// INI KUNCINYA: TOKO DENGERIN FIREBASE, KALO ADMIN GANTI, TOKO LANGSUNG GANTI!
+db.collection("toko").doc("produk").onSnapshot(doc=>{
+  if(doc.exists){
+    produk=doc.data().list || [];
+    // Bikin kategori otomatis dari barang
+    let kats=new Set(["Semua"]); produk.forEach(p=>{if(p.kat) kats.add(p.kat)});
+    kategori=[...kats];
+    document.getElementById("status").innerText="✅ Online - "+produk.length+" produk";
+    tampil();
+  } else {
+    document.getElementById("status").innerText="⚠️ Belum ada produk di Firebase, buka admin dulu";
+  }
+}, err=>{
+  document.getElementById("status").innerText="❌ Gagal konek: "+err.message;
+});
+
+function tampil(){
+  let key=document.getElementById("search").value.toLowerCase();
+  let kHtml=""; kategori.forEach(k=>{kHtml+=`<button class="${k===katAktif?'on':''}" onclick="pilihKat('${k}')">${k}</button>`});
+  document.getElementById("listKat").innerHTML=kHtml;
+  let html="";
+  produk.forEach((p,i)=>{
+    if(katAktif!=="Semua" && p.kat!==katAktif && p.kat!=="Semua") return;
+    if(key && !p.nama.toLowerCase().includes(key)) return;
+    html+=`<div class="card"><img src="${p.img}"><div class="card-body"><b>${p.nama}</b><br><small>Stok: ${p.stok ?? "-"}</small><div class="price">Rp ${p.harga.toLocaleString('id-ID')}</div><button class="add" onclick="tambah(${i})">+ Tambah</button></div></div>`;
+  });
+  document.getElementById("produk").innerHTML=html||"<p style='grid-column:1/3;text-align:center'>Barang gak ketemu / belum ada</p>";
 }
-function add(i){ cart[i]=(cart[i]||0)+1; render(); alert(produk[i].nama+" ditambah!"); }
+function pilihKat(k){katAktif=k;tampil();}
+function tambah(i){keranjang[i]=(keranjang[i]||0)+1;updateCart();}
+function updateCart(){let t=0;for(let k in keranjang)t+=keranjang[k];document.getElementById("cartText").innerText="🛒 Keranjang: "+t+" barang";}
+function bukaKeranjang(){
+  let html="";let total=0;
+  for(let k in keranjang){let p=produk[k];let sub=p.harga*keranjang[k];total+=sub;html+=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:10px 0"><span><b>${p.nama}</b><br>Rp ${p.harga.toLocaleString('id-ID')} x ${keranjang[k]} = Rp ${sub.toLocaleString('id-ID')}</span><span><button onclick="kurang(${k})">-</button> <button onclick="tambah(${k});bukaKeranjang()">+</button> <button onclick="hapusItem(${k})">🗑️</button></span></div>`}
+  document.getElementById("isiKeranjang").innerHTML=html||"Keranjang kosong";
+  document.getElementById("popupKeranjang").style.display="block";
+}
+function tutupKeranjang(){document.getElementById("popupKeranjang").style.display="none";}
+function kurang(i){keranjang[i]--;if(keranjang[i]<=0)delete keranjang[i];updateCart();bukaKeranjang();}
+function hapusItem(i){delete keranjang[i];updateCart();bukaKeranjang();}
+function batalSemua(){keranjang={};updateCart();bukaKeranjang();}
 function checkout(){
- let keys=Object.keys(cart); if(keys.length==0){ alert("Keranjang masih kosong!"); return; }
- let pesan="Halo Toko Dik's, saya mau pesan:%0A"; let total=0;
- keys.forEach(k=>{ let p=produk[k]; let qty=cart[k]; let sub=p.harga*qty; total+=sub; pesan+=`- ${p.nama} x${qty} = Rp ${sub.toLocaleString("id-ID")}%0A`; });
- pesan+=`Total: Rp ${total.toLocaleString("id-ID")}`;
- window.open("https://wa.me/+6282118115124?text="+pesan,"_blank");
+  if(Object.keys(keranjang).length===0){alert("Keranjang masih kosong bro!");return;}
+  let pesan="Halo TOKO DIK'S, saya mau pesan:\n";let total=0;
+  for(let k in keranjang){pesan+=`- ${produk[k].nama} x${keranjang[k]} = Rp ${(produk[k].harga*keranjang[k]).toLocaleString('id-ID')}\n`;total+=produk[k].harga*keranjang[k];}
+  pesan+=`Total: Rp ${total.toLocaleString('id-ID')}\nNama:\nAlamat:`;
+  window.open("https://wa.me/6282118115124?text="+encodeURIComponent(pesan),"_blank");
 }
-let deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; document.getElementById("installBtn").style.display="block"; });
-document.getElementById("installBtn").onclick=async()=>{ if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; document.getElementById("installBtn").style.display="none"; } else { alert("Di HP: Klik titik 3 di Chrome > Tambahkan ke Layar Utama"); } };
-if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }
-render();
-</script>
-</body>
-</html>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script></body></html>
