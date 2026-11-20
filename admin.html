@@ -1,52 +1,53 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin TOKO DIK'S</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<style>*{box-sizing:border-box;font-family:Arial}body{background:#fff7ed;margin:0;padding:14px}
-.wrap{max-width:1150px;margin:0 auto}
-.top{background:#dc2626;color:#fff;padding:14px 18px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}.top h2{margin:0;font-size:20px}
-.layout{display:flex;gap:14px;align-items:flex-start;margin-top:14px}
-.kiri{width:360px;flex-shrink:0;position:sticky;top:14px}
-.kanan{flex:1;min-width:0}
-.card{background:#fff;padding:14px;border-radius:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-input,select{width:100%;padding:11px;margin:5px 0;border:1px solid #ddd;border-radius:9px;font-size:14px}button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer;width:100%}label{font-size:12px;color:#666}.chip{display:inline-block;background:#eee;padding:5px 9px;border-radius:20px;margin:2px;font-size:11px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.item{background:#fff;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;gap:10px}.item img{width:90px;height:90px;object-fit:cover;border-radius:10px;background:#ddd;flex-shrink:0}.item .isi{flex:1;min-width:0}
-@media(max-width:800px){.layout{flex-direction:column}.kiri{width:100%;position:static}.grid{grid-template-columns:1fr}.top{flex-direction:column;gap:4px;text-align:center}}
-</style></head><body><div class="wrap">
+<style>*{box-sizing:border-box;font-family:Inter,Arial}body{background:#f1f5f9;margin:0;padding:0}
+.header{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:19px}.header b span{color:#dc2626}.badge{background:#dcfce7;color:#15803d;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid2{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+.card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card h3{margin:0 0 12px;font-size:16px}
+input,select{width:100%;padding:11px 12px;margin:5px 0;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc;outline:none}input:focus{border-color:#dc2626;background:#fff}
+button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer}
+.btn-merah{background:#dc2626;color:#fff;width:100%}.btn-hitam{background:#0f172a;color:#fff;width:100%}.btn-hijau{background:#16a34a;color:#fff;padding:8px 14px;font-size:13px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:8px 12px;font-size:13px}
+.chip{display:inline-block;background:#f1f5f9;padding:5px 10px;border-radius:20px;margin:2px;font-size:12px;border:1px solid #e2e8f0}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;color:#64748b;padding:10px;border-bottom:1px solid #e2e8f0}td{padding:12px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.produk-info{display:flex;gap:10px;align-items:center}.produk-info img{width:56px;height:56px;object-fit:cover;border-radius:10px;background:#eee}.produk-info b{font-size:14px}.produk-info small{color:#64748b}
+.harga-input{width:110px!important;margin:0!important}.stok-input{width:70px!important;margin:0!important}
+.foto-label{display:inline-block;background:#f1f5f9;padding:7px 10px;border-radius:8px;font-size:12px;cursor:pointer;border:1px dashed #cbd5e1}
+@media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}}
+</style></head><body>
 
-<div class="top"><h2>⚙️ ADMIN TOKO DIK'S</h2><span id="status" style="font-size:13px">Menghubungkan...</span></div>
+<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><span class="badge" id="status">Menghubungkan...</span></div>
 
-<div class="layout">
-<!-- KIRI: TAMBAH -->
-<div class="kiri">
-<div class="card"><h3 style="margin:0 0 8px">➕ Tambah Barang Baru</h3>
-<input id="namaBaru" placeholder="Nama Barang, contoh: Minyak Goreng">
+<div class="wrap"><div class="grid2">
+
+<!-- KIRI -->
+<div>
+<div class="card"><h3>➕ Tambah Barang</h3>
+<input id="namaBaru" placeholder="Nama barang">
 <div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div>
-<input id="varianBaru" placeholder="Varian, contoh: Sanco (opsional)">
+<input id="varianBaru" placeholder="Varian (opsional)">
 <select id="katPilih"></select>
-<input id="fotoBaru" placeholder="Link Foto (opsional)">
-<button onclick="tambahBarang()" style="background:#ea580c;color:#fff">💾 SIMPAN BARANG BARU</button></div>
+<input id="fotoBaru" placeholder="Link foto (opsional)">
+<button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
 
-<div class="card"><h3 style="margin:0 0 8px">🏷️ Tambah Kategori</h3>
-<div id="listKat"></div>
-<input id="katBaru" placeholder="Kategori baru, contoh: Jajanan">
-<button onclick="tambahKat()" style="background:#111;color:#fff">+ Tambah Kategori</button></div>
-
-<div class="card"><h3 style="margin:0 0 8px">🔍 Cari Barang</h3>
-<input id="cari" placeholder="Ketik nama barang..." oninput="render()"></div>
+<div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div>
 </div>
 
-<!-- KANAN: DAFTAR - INI YANG KAYAK TADI, EDIT LANGSUNG KELIATAN -->
-<div class="kanan">
-<h3 style="margin:4px 0 10px">📦 Daftar Barang - Bisa Edit Langsung</h3>
-<div class="grid" id="list"></div>
-</div>
+<!-- KANAN - TABEL -->
+<div class="card" style="padding:0;overflow:hidden">
+<div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div>
+<table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table>
+<p style="text-align:center;color:#94a3b8;font-size:12px;padding:4px">Ketik harga / stok langsung di tabel, lalu klik SIMPAN</p>
 </div>
 
-</div><script>
+</div></div>
+
+<script>
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let produk=[]; let kategori=["Semua","Makanan","Minuman","Rokok","Sembako"];
+let produk=[]; let kategori=["Makanan","Minuman","Rokok","Sembako"];
 const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan",varian:""},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman",varian:""},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Rokok",varian:""}];
 db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";render();},err=>{document.getElementById("status").innerText="❌ Gagal: "+err.message;});
 async function simpan(p){await db.collection("toko").doc("produk").set({list:produk});if(p)alert(p);}
@@ -54,19 +55,19 @@ function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k
 function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("varianBaru").value="";simpan("BERHASIL! "+n+" udah muncul di toko!");}
 function render(){
   document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");
-  document.getElementById("katPilih").innerHTML=kategori.filter(k=>k!=="Semua").map(k=>`<option>${k}</option>`).join("");
+  document.getElementById("katPilih").innerHTML=kategori.map(k=>`<option>${k}</option>`).join("");
   let key=(document.getElementById("cari").value||"").toLowerCase();
   let html="";
   produk.forEach((p,i)=>{
     if(key && !p.nama.toLowerCase().includes(key)) return;
-    html+=`<div class="item"><img src="${p.img}"><div class="isi"><b>${p.nama}</b><br><small>${p.kat||"-"} | ${p.varian||"-"} | Stok: ${p.stok ?? "-"}</small><br>
-    <label>Ganti Harga</label><input type="number" value="${p.harga}" oninput="produk[${i}].harga=+this.value">
-    <label>Ganti Stok</label><input type="number" value="${p.stok ?? 20}" oninput="produk[${i}].stok=+this.value">
-    <label>Ganti Foto (otomatis dikecilin)</label><input type="file" accept="image/*" onchange="upFoto(event,${i})">
-    <div style="display:flex;gap:6px"><button onclick="saveOne(${i})" style="background:#16a34a;color:#fff">💾 SIMPAN</button><button onclick="hapus(${i})" style="background:#fee;color:#dc2626">🗑️ Hapus</button></div>
-    </div></div>`;
+    html+=`<tr><td><div class="produk-info"><img src="${p.img}"><div><b>${p.nama}</b><br><small>${p.varian||"-"}</small></div></div></td>
+    <td><span class="chip">${p.kat||"-"}</span></td>
+    <td><input class="harga-input" type="number" value="${p.harga}" oninput="produk[${i}].harga=+this.value"></td>
+    <td><input class="stok-input" type="number" value="${p.stok ?? 20}" oninput="produk[${i}].stok=+this.value"></td>
+    <td><label class="foto-label">📸 Ganti<input type="file" accept="image/*" style="display:none" onchange="upFoto(event,${i})"></label></td>
+    <td style="white-space:nowrap"><button class="btn-hijau" onclick="saveOne(${i})">SIMPAN</button> <button class="btn-hapus" onclick="hapus(${i})">🗑️</button></td></tr>`;
   });
-  document.getElementById("list").innerHTML=html||"Belum ada barang";
+  document.getElementById("list").innerHTML=html||"<tr><td colspan=6 style='text-align:center'>Belum ada barang</td></tr>";
 }
 function upFoto(e,i){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{let im=new Image();im.onload=()=>{let c=document.createElement("canvas");let max=400,w=im.width,h=im.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);produk[i].img=c.toDataURL("image/jpeg",0.7);render();alert("Foto berubah, klik SIMPAN!");};im.src=ev.target.result;};r.readAsDataURL(f);}
 async function saveOne(i){await simpan("BERHASIL! "+produk[i].nama+" berubah di toko!");}
