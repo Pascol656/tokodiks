@@ -1,102 +1,74 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin TOKO DIK'S</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<style>*{box-sizing:border-box;font-family:Arial}body{background:#fff7ed;margin:0;padding:10px}.wrap{max-width:520px;margin:0 auto}
-.top{background:#dc2626;color:#fff;padding:14px;border-radius:14px;text-align:center}.top h2{margin:0}.top p{margin:4px 0 0;font-size:12px;opacity:.9}
-.btn{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer;width:100%}.btn-merah{background:#dc2626;color:#fff}.btn-hitam{background:#111;color:#fff}.btn-hijau{background:#16a34a;color:#fff}
-.row{display:flex;gap:8px;align-items:center;background:#fff;padding:8px;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.row img{width:52px;height:52px;object-fit:cover;border-radius:9px;background:#ddd;flex-shrink:0}.row .info{flex:1;min-width:0}.row .info b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row .info small{color:#666;font-size:12px}
-.row .aksi{display:flex;gap:5px}.mini{width:auto!important;padding:8px 10px!important;font-size:12px;border-radius:8px}
-.popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99;padding:16px}.popup>div{background:#fff;border-radius:16px;padding:16px;max-height:85vh;overflow:auto}
-input,select{width:100%;padding:11px;margin:5px 0;border:1px solid #ddd;border-radius:9px}label{font-size:12px;color:#666}.chip{display:inline-block;background:#eee;padding:5px 9px;border-radius:20px;margin:2px;font-size:11px}
+<style>*{box-sizing:border-box;font-family:Arial}body{background:#fff7ed;margin:0;padding:14px}
+.wrap{max-width:1150px;margin:0 auto}
+.top{background:#dc2626;color:#fff;padding:14px 18px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}.top h2{margin:0;font-size:20px}
+.layout{display:flex;gap:14px;align-items:flex-start;margin-top:14px}
+.kiri{width:360px;flex-shrink:0;position:sticky;top:14px}
+.kanan{flex:1;min-width:0}
+.card{background:#fff;padding:14px;border-radius:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+input,select{width:100%;padding:11px;margin:5px 0;border:1px solid #ddd;border-radius:9px;font-size:14px}button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer;width:100%}label{font-size:12px;color:#666}.chip{display:inline-block;background:#eee;padding:5px 9px;border-radius:20px;margin:2px;font-size:11px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item{background:#fff;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;gap:10px}.item img{width:90px;height:90px;object-fit:cover;border-radius:10px;background:#ddd;flex-shrink:0}.item .isi{flex:1;min-width:0}
+@media(max-width:800px){.layout{flex-direction:column}.kiri{width:100%;position:static}.grid{grid-template-columns:1fr}.top{flex-direction:column;gap:4px;text-align:center}}
 </style></head><body><div class="wrap">
 
-<div class="top"><h2>⚙️ ADMIN TOKO DIK'S</h2><p id="status">Menghubungkan...</p></div><br>
+<div class="top"><h2>⚙️ ADMIN TOKO DIK'S</h2><span id="status" style="font-size:13px">Menghubungkan...</span></div>
 
-<div style="display:flex;gap:8px">
-<button class="btn btn-hitam" onclick="bukaTambah()" style="flex:1">➕ Tambah Barang</button>
-<button class="btn btn-merah" onclick="bukaKat()" style="flex:1">🏷️ Kategori</button>
-</div><br>
-
-<div style="display:flex;gap:8px;margin-bottom:10px">
-<input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="margin:0">
-</div>
-
-<div id="list"></div>
-<p style="text-align:center;font-size:11px;color:#999">Klik ✏️ Edit buat ganti harga / foto / stok</p>
-
-<!-- POPUP TAMBAH -->
-<div class="popup" id="popTambah"><div><h3 style="margin:0">➕ Tambah Barang Baru <button onclick="tutupSemua()" style="float:right;border:0;background:#eee;padding:6px 10px;border-radius:8px">X</button></h3>
+<div class="layout">
+<!-- KIRI: TAMBAH -->
+<div class="kiri">
+<div class="card"><h3 style="margin:0 0 8px">➕ Tambah Barang Baru</h3>
 <input id="namaBaru" placeholder="Nama Barang, contoh: Minyak Goreng">
 <div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div>
 <input id="varianBaru" placeholder="Varian, contoh: Sanco (opsional)">
 <select id="katPilih"></select>
 <input id="fotoBaru" placeholder="Link Foto (opsional)">
-<button class="btn" style="background:#ea580c;color:#fff" onclick="tambahBarang()">💾 SIMPAN BARANG BARU</button></div></div>
+<button onclick="tambahBarang()" style="background:#ea580c;color:#fff">💾 SIMPAN BARANG BARU</button></div>
 
-<!-- POPUP KATEGORI -->
-<div class="popup" id="popKat"><div><h3 style="margin:0">🏷️ Kategori <button onclick="tutupSemua()" style="float:right;border:0;background:#eee;padding:6px 10px;border-radius:8px">X</button></h3>
-<div id="listKat" style="margin:10px 0"></div>
+<div class="card"><h3 style="margin:0 0 8px">🏷️ Tambah Kategori</h3>
+<div id="listKat"></div>
 <input id="katBaru" placeholder="Kategori baru, contoh: Jajanan">
-<button class="btn btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div></div>
+<button onclick="tambahKat()" style="background:#111;color:#fff">+ Tambah Kategori</button></div>
 
-<!-- POPUP EDIT -->
-<div class="popup" id="popEdit"><div><h3 style="margin:0">✏️ Edit Barang <button onclick="tutupSemua()" style="float:right;border:0;background:#eee;padding:6px 10px;border-radius:8px">X</button></h3>
-<div style="text-align:center"><img id="editImg" style="width:100px;height:100px;object-fit:cover;border-radius:12px;background:#ddd"></div>
-<input id="editNama" placeholder="Nama Barang">
-<div style="display:flex;gap:8px"><input id="editHarga" type="number" placeholder="Harga"><input id="editStok" type="number" placeholder="Stok"></div>
-<input id="editVarian" placeholder="Varian">
-<select id="editKat"></select>
-<label>Ganti Foto (otomatis dikecilin)</label><input type="file" accept="image/*" onchange="upFoto(event)">
-<div style="display:flex;gap:8px"><button class="btn btn-hijau" onclick="simpanEdit()">💾 SIMPAN</button><button class="btn" style="background:#fee;color:#dc2626" onclick="hapusEdit()">🗑️ Hapus</button></div>
-</div></div>
+<div class="card"><h3 style="margin:0 0 8px">🔍 Cari Barang</h3>
+<input id="cari" placeholder="Ketik nama barang..." oninput="render()"></div>
+</div>
+
+<!-- KANAN: DAFTAR - INI YANG KAYAK TADI, EDIT LANGSUNG KELIATAN -->
+<div class="kanan">
+<h3 style="margin:4px 0 10px">📦 Daftar Barang - Bisa Edit Langsung</h3>
+<div class="grid" id="list"></div>
+</div>
+</div>
 
 </div><script>
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let produk=[]; let kategori=["Semua","Makanan","Minuman","Rokok","Sembako"]; let editIndex=-1; let fotoTemp="";
+let produk=[]; let kategori=["Semua","Makanan","Minuman","Rokok","Sembako"];
 const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan",varian:""},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman",varian:""},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Rokok",varian:""}];
 db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";render();},err=>{document.getElementById("status").innerText="❌ Gagal: "+err.message;});
 async function simpan(p){await db.collection("toko").doc("produk").set({list:produk});if(p)alert(p);}
-function tutupSemua(){document.querySelectorAll(".popup").forEach(e=>e.style.display="none");}
-function bukaTambah(){document.getElementById("katPilih").innerHTML=kategori.filter(k=>k!=="Semua").map(k=>`<option>${k}</option>`).join("");document.getElementById("popTambah").style.display="block";}
-function bukaKat(){document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");document.getElementById("popKat").style.display="block";}
-function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return alert("Isi dulu!");if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";bukaKat();alert("Kategori ditambah!");}
-function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("varianBaru").value="";tutupSemua();simpan("BERHASIL! "+n+" udah muncul di toko!");}
+function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return alert("Isi dulu!");if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";render();alert("Kategori ditambah!");}
+function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("varianBaru").value="";simpan("BERHASIL! "+n+" udah muncul di toko!");}
 function render(){
+  document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");
+  document.getElementById("katPilih").innerHTML=kategori.filter(k=>k!=="Semua").map(k=>`<option>${k}</option>`).join("");
   let key=(document.getElementById("cari").value||"").toLowerCase();
   let html="";
   produk.forEach((p,i)=>{
     if(key && !p.nama.toLowerCase().includes(key)) return;
-    html+=`<div class="row"><img src="${p.img}"><div class="info"><b>${p.nama}</b><small>${p.kat||"-"} | ${p.varian||"-"} | Stok ${p.stok ?? "-"}</small><div style="color:#dc2626;font-weight:800">Rp ${p.harga.toLocaleString('id-ID')}</div></div><div class="aksi"><button class="btn btn-hijau mini" onclick="bukaEdit(${i})">✏️ Edit</button><button class="btn mini" style="background:#fee;color:#dc2626" onclick="hapusLangsung(${i})">🗑️</button></div></div>`;
+    html+=`<div class="item"><img src="${p.img}"><div class="isi"><b>${p.nama}</b><br><small>${p.kat||"-"} | ${p.varian||"-"} | Stok: ${p.stok ?? "-"}</small><br>
+    <label>Ganti Harga</label><input type="number" value="${p.harga}" oninput="produk[${i}].harga=+this.value">
+    <label>Ganti Stok</label><input type="number" value="${p.stok ?? 20}" oninput="produk[${i}].stok=+this.value">
+    <label>Ganti Foto (otomatis dikecilin)</label><input type="file" accept="image/*" onchange="upFoto(event,${i})">
+    <div style="display:flex;gap:6px"><button onclick="saveOne(${i})" style="background:#16a34a;color:#fff">💾 SIMPAN</button><button onclick="hapus(${i})" style="background:#fee;color:#dc2626">🗑️ Hapus</button></div>
+    </div></div>`;
   });
-  document.getElementById("list").innerHTML=html||"<p style='text-align:center'>Belum ada barang</p>";
+  document.getElementById("list").innerHTML=html||"Belum ada barang";
 }
-function bukaEdit(i){
-  editIndex=i; fotoTemp=produk[i].img;
-  let p=produk[i];
-  document.getElementById("editImg").src=p.img;
-  document.getElementById("editNama").value=p.nama;
-  document.getElementById("editHarga").value=p.harga;
-  document.getElementById("editStok").value=p.stok ?? 20;
-  document.getElementById("editVarian").value=p.varian||"";
-  document.getElementById("editKat").innerHTML=kategori.filter(k=>k!=="Semua").map(k=>`<option ${k===p.kat?"selected":""}>${k}</option>`).join("");
-  document.getElementById("popEdit").style.display="block";
-}
-function upFoto(e){
-  let f=e.target.files[0];if(!f)return;
-  let r=new FileReader();r.onload=ev=>{let im=new Image();im.onload=()=>{let c=document.createElement("canvas");let max=400,w=im.width,h=im.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);fotoTemp=c.toDataURL("image/jpeg",0.7);document.getElementById("editImg").src=fotoTemp;};im.src=ev.target.result;};r.readAsDataURL(f);
-}
-function simpanEdit(){
-  let p=produk[editIndex];
-  p.nama=document.getElementById("editNama").value.trim()||p.nama;
-  p.harga=parseInt(document.getElementById("editHarga").value)||p.harga;
-  p.stok=parseInt(document.getElementById("editStok").value)||0;
-  p.varian=document.getElementById("editVarian").value.trim();
-  p.kat=document.getElementById("editKat").value;
-  p.img=fotoTemp;
-  tutupSemua();simpan("BERHASIL! "+p.nama+" udah berubah di toko!");
-}
-function hapusEdit(){if(confirm("Hapus "+produk[editIndex].nama+"?")){produk.splice(editIndex,1);tutupSemua();simpan("Dihapus!");}}
-function hapusLangsung(i){if(confirm("Hapus "+produk[i].nama+"?")){produk.splice(i,1);simpan("Dihapus!");}}
+function upFoto(e,i){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{let im=new Image();im.onload=()=>{let c=document.createElement("canvas");let max=400,w=im.width,h=im.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);produk[i].img=c.toDataURL("image/jpeg",0.7);render();alert("Foto berubah, klik SIMPAN!");};im.src=ev.target.result;};r.readAsDataURL(f);}
+async function saveOne(i){await simpan("BERHASIL! "+produk[i].nama+" berubah di toko!");}
+function hapus(i){if(confirm("Hapus "+produk[i].nama+"?")){produk.splice(i,1);simpan("Dihapus!");}}
 </script></body></html>
