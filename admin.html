@@ -1,77 +1,128 @@
-<!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin TOKO DIK'S</title>
-<style>
-*{box-sizing:border-box;font-family:Arial}body{background:#f5f5f5;margin:0;padding:12px}.wrap{max-width:520px;margin:0 auto}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:14px;background:#fff}
-button{padding:12px;border:0;border-radius:10px;font-weight:800;cursor:pointer;width:100%}
-.card{background:#fff;padding:14px;border-radius:14px;margin-bottom:12px}
-.chip{display:inline-block;background:#eee;padding:6px 10px;border-radius:20px;margin:3px;font-size:12px}
-.item{display:flex;gap:10px;border-bottom:1px solid #eee;padding:12px 0}.item img{width:70px;height:70px;object-fit:cover;border-radius:10px;background:#ddd}.item .isi{flex:1}
-.btn-kecil{width:auto!important;padding:8px 10px!important;font-size:12px}
-</style></head><body><div class="wrap">
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin TOKO DIK'S</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>*{box-sizing:border-box;font-family:Arial}body{background:#fff7ed;margin:0;padding:12px}.wrap{max-width:520px;margin:0 auto}h1{color:#dc2626;text-align:center}h3{margin:0 0 8px}.card{background:#fff;padding:14px;border-radius:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.card-flex{display:flex;gap:10px}.card-flex img{width:90px;height:90px;object-fit:cover;border-radius:10px;background:#ddd;flex-shrink:0}input,select{width:100%;padding:11px;margin:5px 0;border:1px solid #ddd;border-radius:9px;background:#fff;font-size:14px}button{background:#dc2626;color:#fff;border:0;padding:11px;border-radius:10px;width:100%;font-weight:800;cursor:pointer;font-size:14px}label{font-size:12px;color:#666}.chip{display:inline-block;background:#eee;padding:6px 10px;border-radius:20px;margin:3px;font-size:12px}.btn-kecil{width:auto!important;padding:8px 10px!important;font-size:12px}</style></head><body><div class="wrap">
 
+<!-- LOGIN -->
 <div id="loginBox" style="max-width:360px;margin:60px auto;background:#fff;padding:24px;border-radius:16px;text-align:center">
 <h2>🔒 LOGIN ADMIN</h2><p style="color:#888;font-size:13px">Hanya Pemilik Toko Dik's</p>
 <input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password">
-<button onclick="loginAdmin()" style="background:#dc2626;color:#fff">MASUK</button>
-<p id="pesanLogin" style="color:red;font-size:13px"></p></div>
+<button onclick="loginAdmin()">MASUK</button>
+<p id="pesanLogin" style="color:red;font-size:13px"></p>
+<p style="font-size:11px;color:#aaa">Username: diks / Password: diks12345</p></div>
 
 <div id="isiAdmin" style="display:none">
-<h2 style="display:flex;justify-content:space-between;align-items:center">👋 Halo Bos Diks! <button onclick="logoutAdmin()" style="width:auto;background:#111;color:#fff">Logout</button></h2>
+<h1>⚙️ ADMIN TOKO DIK'S</h1>
+<p id="status" style="text-align:center;font-size:13px">Menghubungkan ke Firebase...</p>
+<div style="text-align:right"><button onclick="logoutAdmin()" style="width:auto;background:#111">Logout</button></div><br>
 
-<div class="card"><h3 style="margin:0 0 8px">➕ Tambah Kategori Baru</h3>
-<input id="katBaru" placeholder="Contoh: Sembako, Rokok, Jajanan">
-<button onclick="tambahKat()" style="background:#111;color:#fff">+ Tambah Kategori</button>
+<!-- TAMBAH KATEGORI -->
+<div class="card"><h3>➕ Tambah Kategori Baru</h3>
+<input id="katBaru" placeholder="Contoh: Sembako, Jajanan, Gas">
+<button onclick="tambahKat()" style="background:#111">+ Tambah Kategori</button>
 <div id="listKat" style="margin-top:10px"></div></div>
 
-<div class="card"><h3 style="margin:0 0 8px">➕ Tambah Barang + Varian</h3>
-<input id="namaBaru" placeholder="Nama Barang, contoh: Mie Goreng">
-<input id="hargaBaru" type="number" placeholder="Harga, contoh: 3500">
-<input id="varianBaru" placeholder="Varian, contoh: Original, Pedas (pisah koma)">
+<!-- TAMBAH BARANG -->
+<div class="card"><h3>➕ Tambah Barang Baru</h3>
+<input id="namaBaru" placeholder="Nama Barang, contoh: Minyak Goreng">
+<input id="hargaBaru" type="number" placeholder="Harga, contoh: 35000">
+<input id="stokBaru" type="number" placeholder="Stok, contoh: 20">
+<input id="varianBaru" placeholder="Varian, contoh: Sanco, Tropical (opsional)">
 <select id="katPilih"></select>
-<input id="fotoBaru" placeholder="Link Foto (opsional)">
-<button onclick="tambahBarang()" style="background:#dc2626;color:#fff">SIMPAN BARANG</button></div>
+<input id="fotoBaru" placeholder="Link Foto (opsional, bisa kosong)">
+<button onclick="tambahBarang()" style="background:#ea580c">💾 SIMPAN BARANG BARU</button></div>
 
-<div class="card"><h3 style="margin:0 0 8px">📦 Daftar Barang - Bisa Edit Harga & Foto</h3><div id="listBarang"></div></div>
+<!-- DAFTAR BARANG -->
+<div class="card"><h3>📦 Daftar Barang - Bisa Edit Semua</h3><div id="list"></div></div>
 </div></div>
 
 <script>
-const USERNAME_BENAR="diks"; const PASSWORD_BENAR="diks12345";
+// KUNCI SAMA PERSIS KAYAK KEMAREN
+const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
+firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
+
+// LOGIN
+const USER_BENAR="diks"; const PASS_BENAR="diks12345";
 if(localStorage.getItem("loginAdminDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}
-function loginAdmin(){let u=document.getElementById("user").value;let p=document.getElementById("pass").value;if(u===USERNAME_BENAR&&p===PASSWORD_BENAR){localStorage.setItem("loginAdminDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}else{document.getElementById("pesanLogin").innerText="Username / Password salah!";}}
+function loginAdmin(){let u=document.getElementById("user").value;let p=document.getElementById("pass").value;if(u===USER_BENAR&&p===PASS_BENAR){localStorage.setItem("loginAdminDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}else{document.getElementById("pesanLogin").innerText="Username / Password salah!";}}
 function logoutAdmin(){localStorage.removeItem("loginAdminDiks");location.reload();}
 
-// BARANG AWAL - SAMA KAYAK DI TOKO
-let barangAwal=[
- {nama:"Mie Instan",harga:2000,kat:"Makanan",varian:"",img:"https://via.placeholder.com/70?text=Mie"},
- {nama:"Kopi Sachet",harga:4000,kat:"Minuman",varian:"",img:"https://via.placeholder.com/70?text=Kopi"},
- {nama:"Rokok",harga:27000,kat:"Rokok",varian:"",img:"https://via.placeholder.com/70?text=Rokok"},
-];
-let produk=JSON.parse(localStorage.getItem("produkDiks")||"null");
-if(!produk){produk=barangAwal;localStorage.setItem("produkDiks",JSON.stringify(produk));}
-let kategori=JSON.parse(localStorage.getItem("katDiks")||'["Semua","Makanan","Minuman","Rokok","Sembako"]');
-function simpan(){localStorage.setItem("produkDiks",JSON.stringify(produk));localStorage.setItem("katDiks",JSON.stringify(kategori));tampil();}
-function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return alert("Isi dulu");if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";simpan();}
-function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let v=document.getElementById("varianBaru").value;let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value||"https://via.placeholder.com/70?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib");produk.push({nama:n,harga:h,kat:k,varian:v,img:f});document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("varianBaru").value="";simpan();alert("Barang ditambah! Cek di toko!");}
-function gantiHarga(i,val){produk[i].harga=parseInt(val)||0;simpan();}
-function hapusBarang(i){if(confirm("Hapus "+produk[i].nama+"?")){produk.splice(i,1);simpan();}}
-function gantiFoto(i,input){
- let file=input.files[0];if(!file)return;
- let reader=new FileReader();
- reader.onload=function(e){let img=new Image();img.onload=function(){let c=document.createElement("canvas");let max=300;let w=img.width,h=img.height;if(w>max){h=h*w/max;w=max;}c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);produk[i].img=c.toDataURL("image/jpeg",0.8);simpan();alert("Foto keganti!");};img.src=e.target.result;};
- reader.readAsDataURL(file);
+let produk=[];
+let kategori=["Semua","Makanan","Minuman","Rokok","Sembako"];
+const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan",varian:""},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman",varian:""},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Rokok",varian:""}];
+
+// DENGERIN FIREBASE - KALO ADA PERUBAHAN, LANGSUNG UPDATE
+db.collection("toko").doc("produk").onSnapshot(doc=>{
+  if(doc.exists){produk=doc.data().list||[];}
+  else{produk=def; db.collection("toko").doc("produk").set({list:def});}
+  // Kategori otomatis dari barang + yang udah ditambah
+  let setKat=new Set(kategori); produk.forEach(p=>{if(p.kat) setKat.add(p.kat)}); kategori=[...setKat];
+  document.getElementById("status").innerText="✅ Terhubung ke Firebase - "+produk.length+" produk";
+  render();
+}, err=>{document.getElementById("status").innerText="❌ Gagal: "+err.message;});
+
+async function simpanKeFirebase(pesan){
+  document.getElementById("status").innerText="Menyimpan...";
+  await db.collection("toko").doc("produk").set({list:produk});
+  if(pesan) alert(pesan);
 }
-function tampil(){
- let kHtml="";kategori.forEach(k=>{kHtml+=`<span class="chip">${k}</span>`});document.getElementById("listKat").innerHTML=kHtml;
- let s="";kategori.forEach(k=>{if(k!=="Semua")s+=`<option>${k}</option>`});document.getElementById("katPilih").innerHTML=s;
- let h="";produk.forEach((p,i)=>{
-  h+=`<div class="item"><img src="${p.img}"><div class="isi"><b>${p.nama}</b><br><small>${p.kat} | ${p.varian||"-"} | Rp ${p.harga.toLocaleString('id-ID')}</small><br>
-  <label style="font-size:12px">Ganti Harga</label><input type="number" value="${p.harga}" onchange="gantiHarga(${i},this.value)" style="padding:8px">
-  <label style="font-size:12px">Ganti Foto (otomatis dikecilin)</label><input type="file" accept="image/*" onchange="gantiFoto(${i},this)">
-  <button class="btn-kecil" onclick="hapusBarang(${i})" style="background:#fee;color:#dc2626">🗑️ Hapus Barang Ini</button>
-  </div></div>`;
- });
- document.getElementById("listBarang").innerHTML=h||"Belum ada barang";
+
+function tambahKat(){
+  let k=document.getElementById("katBaru").value.trim();
+  if(!k) return alert("Isi dulu kategorinya!");
+  if(!kategori.includes(k)) kategori.push(k);
+  document.getElementById("katBaru").value="";
+  render(); alert("Kategori "+k+" ditambah! Sekarang bisa dipake pas tambah barang.");
 }
-tampil();
+
+function tambahBarang(){
+  let n=document.getElementById("namaBaru").value.trim();
+  let h=parseInt(document.getElementById("hargaBaru").value);
+  let s=parseInt(document.getElementById("stokBaru").value)||20;
+  let v=document.getElementById("varianBaru").value.trim();
+  let k=document.getElementById("katPilih").value;
+  let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);
+  if(!n||!h) return alert("Nama + Harga wajib diisi!");
+  produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});
+  document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("varianBaru").value="";document.getElementById("fotoBaru").value="";
+  simpanKeFirebase("BERHASIL! "+n+" udah muncul di toko pembeli!");
+}
+
+function render(){
+  // List Kategori
+  document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");
+  // Dropdown kategori buat tambah barang
+  document.getElementById("katPilih").innerHTML=kategori.filter(k=>k!=="Semua").map(k=>`<option>${k}</option>`).join("");
+  // List Barang
+  document.getElementById("list").innerHTML=produk.map((p,i)=>`
+  <div class="card-flex" style="border-bottom:1px solid #eee;padding:12px 0">
+    <img src="${p.img}">
+    <div style="flex:1">
+      <b>${p.nama}</b><br><small>${p.kat||"-"} | ${p.varian||"-"} | Stok: ${p.stok ?? "-"}</small><br>
+      <label>Ganti Harga</label><input type="number" value="${p.harga}" oninput="produk[${i}].harga=+this.value">
+      <label>Ganti Stok</label><input type="number" value="${p.stok ?? 20}" oninput="produk[${i}].stok=+this.value">
+      <label>Ganti Foto (otomatis dikecilin)</label><input type="file" accept="image/*" onchange="upFoto(event,${i})">
+      <div style="display:flex;gap:6px">
+        <button onclick="saveOne(${i})" style="background:#16a34a">💾 SIMPAN</button>
+        <button onclick="hapusBarang(${i})" style="background:#fee;color:#dc2626">🗑️ Hapus</button>
+      </div>
+    </div>
+  </div>`).join("") || "Belum ada barang";
+}
+
+function upFoto(e,i){
+  let file=e.target.files[0]; if(!file) return;
+  let r=new FileReader();
+  r.onload=ev=>{
+    let img=new Image(); img.onload=()=>{
+      let c=document.createElement("canvas"); let max=400; let w=img.width, h=img.height;
+      if(w>h){ if(w>max){h=h*max/w; w=max;} } else { if(h>max){w=w*max/h; h=max;} }
+      c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h);
+      produk[i].img=c.toDataURL("image/jpeg",0.7);
+      render(); alert("Foto udah dikecilin & preview berubah! Klik SIMPAN ya bro!");
+    }; img.src=ev.target.result;
+  }; r.readAsDataURL(file);
+}
+async function saveOne(i){await simpanKeFirebase("BERHASIL! "+produk[i].nama+" udah berubah di toko!");}
+function hapusBarang(i){if(confirm("Hapus "+produk[i].nama+"?")){produk.splice(i,1);simpanKeFirebase("Barang dihapus! Udah ilang dari toko juga!");}}
 </script></body></html>
