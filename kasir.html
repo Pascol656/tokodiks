@@ -3,42 +3,32 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<style>*{box-sizing:border-box;font-family:Arial}body{background:#f1f5f9;margin:0}.header{background:#111;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:18px}.header b span{color:#facc15}.wrap{max-width:1000px;margin:0 auto;padding:14px}.grid{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;margin-bottom:14px}.card h3{margin:0 0 10px;font-size:15px}input,select{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;background:#f8fafc;outline:none;margin:4px 0}button{border:0;padding:12px;border-radius:10px;font-weight:800;cursor:pointer}button:active{transform:scale(0.97)}.btn-scan{background:#111;color:#fff;flex:1}.btn-bayar{background:#16a34a;color:#fff;width:100%;padding:16px;font-size:18px;margin-top:10px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:6px 10px;font-size:12px}.produk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.produk-btn{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:left}.produk-btn b{font-size:13px;display:block}.produk-btn small{color:#64748b}.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;gap:8px}.qty-btn{width:36px;height:36px;border-radius:8px;background:#f1f5f9;font-size:18px;padding:0}.total-box{background:#111;color:#fff;border-radius:14px;padding:14px;margin-top:10px}.total-box .row{display:flex;justify-content:space-between;margin:4px 0}.total-box .grand{font-size:24px;font-weight:900}.kembalian{font-size:22px;font-weight:900;color:#16a34a;text-align:center;margin-top:8px}.tab{display:flex;gap:8px;margin-bottom:12px}.tab button{flex:1;background:#e2e8f0;padding:14px}.tab button.active{background:#111;color:#fff}.rekap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.rekap div{background:#f8fafc;border-radius:12px;padding:12px;text-align:center}.rekap b{font-size:18px;display:block}#reader{width:100%;border-radius:12px;overflow:hidden;display:none;margin-top:10px}#btnInstall{display:none;background:#facc15;color:#111;width:100%;margin-bottom:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.produk-grid{grid-template-columns:repeat(2,1fr)}.rekap{grid-template-columns:1fr}}
+<style>*{box-sizing:border-box;font-family:Arial}body{background:#f1f5f9;margin:0}.header{background:#111;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:18px}.header b span{color:#facc15}.wrap{max-width:1000px;margin:0 auto;padding:14px}.grid{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;margin-bottom:14px}.card h3{margin:0 0 10px;font-size:15px}input,select{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;background:#f8fafc;outline:none;margin:4px 0}button{border:0;padding:12px;border-radius:10px;font-weight:800;cursor:pointer}button:active{transform:scale(0.97)}.btn-scan{background:#111;color:#fff;flex:1}.btn-bayar{background:#16a34a;color:#fff;width:100%;padding:16px;font-size:18px;margin-top:10px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:6px 10px;font-size:12px}.produk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.produk-btn{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:left}.produk-btn b{font-size:13px;display:block}.produk-btn small{color:#64748b}.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;gap:8px}.qty-btn{width:36px;height:36px;border-radius:8px;background:#f1f5f9;font-size:18px;padding:0}.total-box{background:#111;color:#fff;border-radius:14px;padding:14px;margin-top:10px}.total-box .row{display:flex;justify-content:space-between;margin:4px 0}.total-box .grand{font-size:24px;font-weight:900}.kembalian{font-size:22px;font-weight:900;color:#16a34a;text-align:center;margin-top:8px}.tab{display:flex;gap:8px;margin-bottom:12px}.tab button{flex:1;background:#e2e8f0;padding:14px}.tab button.active{background:#111;color:#fff}#reader{width:100%;border-radius:12px;overflow:hidden;display:none;margin-top:10px}#btnInstall{display:none;background:#facc15;color:#111;width:100%;margin-bottom:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.produk-grid{grid-template-columns:repeat(2,1fr)}}
 </style></head><body>
-  <div id="lockKasir" style="position:fixed; inset:0; background:#111; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:white; font-family:sans-serif; padding:20px; text-align:center;">
-  <h2 style="margin:0;">TOKO DIK'S - KASIR</h2>
-  <p style="margin:0; opacity:0.7;">Masukkan Password Kasir</p>
-  <input id="passKasir" type="password" placeholder="Password..." style="padding:12px; font-size:16px; border-radius:8px; border:none; width:220px; text-align:center;">
-  <button onclick="cekPass()" style="padding:12px 20px; font-size:16px; border:none; border-radius:8px; background:#22c55e; color:white; font-weight:bold; width:220px;">MASUK</button>
-  <p id="salahPass" style="color:#ff6b6b; display:none; margin:0;">Password salah bro!</p>
+<div id="lockKasir" style="position:fixed;inset:0;background:#111;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:white;padding:20px;text-align:center;">
+<h2 style="margin:0">TOKO DIK'S - KASIR</h2><p style="margin:0;opacity:.7">Masukkan Password Kasir</p>
+<input id="passKasir" type="password" placeholder="Password..." style="padding:12px;font-size:16px;border-radius:8px;border:none;width:220px;text-align:center;">
+<button onclick="cekPass()" style="padding:12px 20px;font-size:16px;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:bold;width:220px">MASUK</button>
+<p id="salahPass" style="color:#ff6b6b;display:none;margin:0">Password salah bro!</p>
 </div>
-
 <script>
-function logoutKasir(){
-  sessionStorage.removeItem('sudahLoginKasir');
-  location.reload();
-}
+function logoutKasir(){ sessionStorage.removeItem('sudahLoginKasir'); location.reload(); }
 function cekPass(){
   var input = document.getElementById('passKasir').value.trim().toLowerCase();
-  if(input === "open112233" || input === "1234" || input === "open" ){
-    document.getElementById('lockKasir').style.display = 'none'; 
+  if(input === "open112233" || input === "1234" || input === "open"){
+    document.getElementById('lockKasir').style.display = 'none';
     sessionStorage.setItem('sudahLoginKasir','ya');
-  } else { 
-    document.getElementById('salahPass').style.display = 'block'; 
+  } else {
+    document.getElementById('salahPass').style.display = 'block';
   }
 }
-}
-if(sessionStorage.getItem('sudahLoginKasir') === 'ya'){
-  document.getElementById('lockKasir').style.display = 'none';
-}
+if(sessionStorage.getItem('sudahLoginKasir') === 'ya'){ document.getElementById('lockKasir').style.display = 'none'; }
 document.getElementById('passKasir').addEventListener('keyup', function(e){ if(e.key === 'Enter'){ cekPass(); } });
 </script>
 <div class="header"><b>🧾 TOKO <span>DIK'S</span> | KASIR</b><div><span id="jam" style="font-size:12px"></span> <button type="button" onclick="logoutKasir()" style="background:#ef4444;color:#fff;padding:8px 14px">🚪 LOGOUT</button> <button type="button" onclick="location.reload()" style="background:#333;color:#fff;padding:8px 14px">🔄 Refresh</button></div></div>
 <div class="wrap">
 <button type="button" id="btnInstall" onclick="installApp()">📲 INSTALL APLIKASI KASIR</button>
-<div class="rekap card"><div><small>💰 MASUK HARI INI</small><b id="rekMasuk" style="color:#16a34a">Rp 0</b></div><div><small>💸 KELUAR HARI INI</small><b id="rekKeluar" style="color:#dc2626">Rp 0</b></div><div><small>📦 TOTAL STOK</small><b id="rekStok">0 pcs</b></div></div>
-<div class="tab"><button type="button" id="btnTabKasir" class="active" onclick="pindahTab('kasir')">🛒 Kasir</button><button type="button" id="btnTabKeluar" onclick="pindahTab('keluar')">💸 Pengeluaran</button><button type="button" id="btnTabRekap" onclick="pindahTab('rekap')">📊 Rekap</button></div>
-
+<div class="tab"><button type="button" id="btnTabKasir" class="active" onclick="pindahTab('kasir')">🛒 Kasir</button><button type="button" id="btnTabKeluar" onclick="pindahTab('keluar')">💸 Pengeluaran</button></div>
 <div id="tabKasir">
 <div class="grid"><div>
 <div class="card"><h3>📷 Scan Barcode</h3><div style="display:flex;gap:8px"><input id="inputBarcode" placeholder="Scan / ketik barcode, ENTER..." autocomplete="off"><button type="button" class="btn-scan" onclick="toggleScan()">📷 SCAN</button></div><div id="reader"></div><input id="cariBarang" placeholder="🔍 Cari nama barang..." oninput="renderProduk()"><div class="produk-grid" id="gridProduk"></div></div>
@@ -54,36 +44,25 @@ document.getElementById('passKasir').addEventListener('keyup', function(e){ if(e
 <button type="button" onclick="batalTransaksi()" style="background:#f1f5f9;width:100%;margin-top:8px">❌ Batalkan</button>
 </div></div></div>
 </div>
-
 <div id="tabKeluar" style="display:none"><div class="card"><h3>💸 Input Pengeluaran</h3><input id="namaKeluar" placeholder="Contoh: Beli 1 dus Mie, Listrik..."><input id="nominalKeluar" type="number" placeholder="Nominal - contoh: 150000"><select id="katKeluar"><option>BELI BARANG</option><option>LISTRIK / PULSA</option><option>BENSIN / ONGKIR</option><option>GAJI</option><option>LAINNYA</option></select><button type="button" style="background:#dc2626;color:#fff;width:100%" onclick="simpanPengeluaran()">💾 SIMPAN PENGELUARAN</button></div><div class="card"><h3>📋 Pengeluaran Hari Ini</h3><div id="listKeluar">Memuat...</div></div></div>
-
-<div id="tabRekap" style="display:none"><div class="card"><h3>📊 Rekap Hari Ini - <span id="tglRekap"></span></h3><div style="font-size:14px;line-height:2"><div style="display:flex;justify-content:space-between"><span>Pemasukan (LUNAS)</span><b id="rMasuk" style="color:#16a34a">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Pengeluaran</span><b id="rKeluar" style="color:#dc2626">Rp 0</b></div><div style="display:flex;justify-content:space-between;border-top:1px dashed #ccc;padding-top:6px"><span>UNTUNG BERSIH</span><b id="rBersih">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Tagihan Belum Dibayar</span><b id="rTagihan">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Jumlah Transaksi</span><b id="rJml">0x</b></div></div></div><div class="card"><h3>🧾 Transaksi Terakhir</h3><div id="listTransaksi">Memuat...</div></div><div class="card"><h3>📦 Stok Menipis</h3><div id="listStokTipis">Memuat...</div></div></div>
 </div>
-
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;document.getElementById('btnInstall').style.display='block';});
 function installApp(){if(deferredPrompt){deferredPrompt.prompt();}else{alert('Di HP: Pencet titik 3 di Chrome > Tambahkan ke Layar Utama');}}
-
 function pindahTab(t){
   document.getElementById("tabKasir").style.display = (t==="kasir" ? "block" : "none");
   document.getElementById("tabKeluar").style.display = (t==="keluar" ? "block" : "none");
-  document.getElementById("tabRekap").style.display = (t==="rekap" ? "block" : "none");
   document.getElementById("btnTabKasir").className = (t==="kasir" ? "active" : "");
   document.getElementById("btnTabKeluar").className = (t==="keluar" ? "active" : "");
-  document.getElementById("btnTabRekap").className = (t==="rekap" ? "active" : "");
-  if(t==="keluar" || t==="rekap"){ loadRekap(); }
+  if(t==="keluar"){ loadPengeluaranKasir(); }
   window.scrollTo(0,0);
 }
 setInterval(()=>{let el=document.getElementById("jam"); if(el) el.innerText=new Date().toLocaleTimeString("id-ID");},1000);
-document.getElementById("tglRekap").innerText=new Date().toLocaleDateString("id-ID");
-
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
 let produk=[];let cart=[];let html5Qr=null;let isScanning=false;
-
-db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists) produk=doc.data().list||[];renderProduk();updateRekapStok();});
+db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists) produk=doc.data().list||[];renderProduk();});
 async function simpanProduk(){await db.collection("toko").doc("produk").set({list:produk});}
 function renderProduk(){let key=(document.getElementById("cariBarang").value||"").toLowerCase();let html="";produk.forEach((p,i)=>{if(key && !p.nama.toLowerCase().includes(key) && !(p.barcode||"").includes(key)) return;html+=`<button type="button" class="produk-btn" onclick="tambahKeCart(${i})"><b>${p.nama}</b><small>Rp ${p.harga.toLocaleString("id-ID")} - Stok: ${p.stok} ${p.barcode?` - ${p.barcode}`:""}</small></button>`;});document.getElementById("gridProduk").innerHTML=html||"<p style='font-size:12px;color:#999'>Barang tidak ditemukan</p>";}
 function tambahKeCart(i){let p=produk[i];let ada=cart.find(c=>c.idx===i);if(ada){if(ada.qty>=p.stok) return alert("Stok habis! Sisa "+p.stok);ada.qty++;}else{if(p.stok<=0) return alert("Stok habis!");cart.push({idx:i,nama:p.nama,harga:p.harga,qty:1});}renderCart();}
@@ -112,10 +91,7 @@ document.getElementById("inputBarcode").addEventListener("keypress",function(e){
 function cariBarcode(kode){if(!kode) return;let idx=produk.findIndex(p=>(p.barcode||"")===kode);if(idx>=0){tambahKeCart(idx);}else{if(confirm("Barcode "+kode+" belum ada! Daftarkan?")){document.getElementById("barcodeBaru").value=kode;document.getElementById("namaBaru").focus();window.scrollTo(0,600);}}}
 async function toggleScan(){if(isScanning){await html5Qr.stop();document.getElementById("reader").style.display="none";isScanning=false;return;}document.getElementById("reader").style.display="block";html5Qr=new Html5Qrcode("reader");isScanning=true;html5Qr.start({facingMode:"environment"},{fps:10,qrbox:250},(decoded)=>{cariBarcode(decoded);},()=>{}).catch(e=>alert("Kamera gagal: "+e));}
 async function tambahBarangKasir(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value)||0;let s=parseInt(document.getElementById("stokBaru").value)||0;let b=document.getElementById("barcodeBaru").value.trim();if(!n||!h) return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:"",kat:"Umum",varian:"",barcode:b});await simpanProduk();document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("barcodeBaru").value="";alert("Barang ditambahkan!");}
-async function simpanPengeluaran(){let n=document.getElementById("namaKeluar").value.trim();let nom=parseInt(document.getElementById("nominalKeluar").value)||0;let kat=document.getElementById("katKeluar").value;if(!n||!nom) return alert("Isi nama + nominal!");await db.collection("pengeluaran").add({nama:n,nominal:nom,kat:kat,kasir:"Kasir 1",waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID"),tgl:new Date().toISOString().slice(0,10)});document.getElementById("namaKeluar").value="";document.getElementById("nominalKeluar").value="";alert("Pengeluaran tersimpan!");}
-function updateRekapStok(){let totalStok=produk.reduce((s,p)=>s+(p.stok||0),0);document.getElementById("rekStok").innerText=totalStok+" pcs";}
-function loadRekap(){let today=new Date().toISOString().slice(0,10);db.collection("transaksi").where("tgl","==",today).onSnapshot(s=>{let masuk=0,tagihan=0,jml=0;s.forEach(d=>{let t=d.data();if(t.metode==="TAGIHAN") tagihan+=t.total; else masuk+=t.total; jml++;});document.getElementById("rekMasuk").innerText="Rp "+masuk.toLocaleString("id-ID");document.getElementById("rMasuk").innerText="Rp "+masuk.toLocaleString("id-ID");document.getElementById("rTagihan").innerText="Rp "+tagihan.toLocaleString("id-ID");document.getElementById("rJml").innerText=jml+"x";let keluarText=document.getElementById("rKeluar").innerText||"0";let keluar=parseInt(keluarText.replace(/\D/g,""))||0;document.getElementById("rBersih").innerText="Rp "+(masuk-keluar).toLocaleString("id-ID");let html="";s.forEach(d=>{let t=d.data();html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.items}</b><br><small>${t.tanggal} - ${t.metode} - Rp ${t.total.toLocaleString("id-ID")}</small></div>`;});document.getElementById("listTransaksi").innerHTML=html||"Belum ada transaksi";});
-db.collection("pengeluaran").where("tgl","==",today).onSnapshot(s=>{let keluar=0;let html="";s.forEach(d=>{let t=d.data();keluar+=t.nominal;html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.nama}</b> - Rp ${t.nominal.toLocaleString("id-ID")}<br><small>${t.kat} - ${t.tanggal}</small></div>`;});document.getElementById("rekKeluar").innerText="Rp "+keluar.toLocaleString("id-ID");document.getElementById("rKeluar").innerText="Rp "+keluar.toLocaleString("id-ID");document.getElementById("listKeluar").innerHTML=html||"Belum ada pengeluaran";});
-let tipis=produk.filter(p=>(p.stok||0)<=3);document.getElementById("listStokTipis").innerHTML=tipis.length? tipis.map(p=>`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${p.nama}</b> - Sisa <b style="color:#dc2626">${p.stok}</b></div>`).join("") : "Semua stok aman!";}
-loadRekap();
+async function simpanPengeluaran(){let n=document.getElementById("namaKeluar").value.trim();let nom=parseInt(document.getElementById("nominalKeluar").value)||0;let kat=document.getElementById("katKeluar").value;if(!n||!nom) return alert("Isi nama + nominal!");await db.collection("pengeluaran").add({nama:n,nominal:nom,kat:kat,kasir:"Kasir 1",waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID"),tgl:new Date().toISOString().slice(0,10)});document.getElementById("namaKeluar").value="";document.getElementById("nominalKeluar").value="";alert("Pengeluaran tersimpan!");loadPengeluaranKasir();}
+function loadPengeluaranKasir(){let today=new Date().toISOString().slice(0,10);db.collection("pengeluaran").where("tgl","==",today).onSnapshot(s=>{let html="";s.forEach(d=>{let t=d.data();html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.nama}</b> - Rp ${t.nominal.toLocaleString("id-ID")}<br><small>${t.kat} - ${t.tanggal}</small></div>`;});document.getElementById("listKeluar").innerHTML=html||"Belum ada pengeluaran";});}
+loadPengeluaranKasir();
 </script></body></html>
