@@ -5,6 +5,32 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>*{box-sizing:border-box;font-family:Arial}body{background:#f1f5f9;margin:0}.header{background:#111;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:18px}.header b span{color:#facc15}.wrap{max-width:1000px;margin:0 auto;padding:14px}.grid{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;margin-bottom:14px}.card h3{margin:0 0 10px;font-size:15px}input,select{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;background:#f8fafc;outline:none;margin:4px 0}button{border:0;padding:12px;border-radius:10px;font-weight:800;cursor:pointer}button:active{transform:scale(0.97)}.btn-scan{background:#111;color:#fff;flex:1}.btn-bayar{background:#16a34a;color:#fff;width:100%;padding:16px;font-size:18px;margin-top:10px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:6px 10px;font-size:12px}.produk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.produk-btn{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:left}.produk-btn b{font-size:13px;display:block}.produk-btn small{color:#64748b}.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;gap:8px}.qty-btn{width:36px;height:36px;border-radius:8px;background:#f1f5f9;font-size:18px;padding:0}.total-box{background:#111;color:#fff;border-radius:14px;padding:14px;margin-top:10px}.total-box .row{display:flex;justify-content:space-between;margin:4px 0}.total-box .grand{font-size:24px;font-weight:900}.kembalian{font-size:22px;font-weight:900;color:#16a34a;text-align:center;margin-top:8px}.tab{display:flex;gap:8px;margin-bottom:12px}.tab button{flex:1;background:#e2e8f0;padding:14px}.tab button.active{background:#111;color:#fff}.rekap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.rekap div{background:#f8fafc;border-radius:12px;padding:12px;text-align:center}.rekap b{font-size:18px;display:block}#reader{width:100%;border-radius:12px;overflow:hidden;display:none;margin-top:10px}#btnInstall{display:none;background:#facc15;color:#111;width:100%;margin-bottom:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.produk-grid{grid-template-columns:repeat(2,1fr)}.rekap{grid-template-columns:1fr}}
 </style></head><body>
+  <div id="lockKasir" style="position:fixed; inset:0; background:#111; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:white; font-family:sans-serif; padding:20px; text-align:center;">
+  <h2 style="margin:0;">TOKO DIK'S - KASIR</h2>
+  <p style="margin:0; opacity:0.7;">Masukkan Password Kasir</p>
+  <input id="passKasir" type="password" placeholder="Password..." style="padding:12px; font-size:16px; border-radius:8px; border:none; width:220px; text-align:center;">
+  <button onclick="cekPass()" style="padding:12px 20px; font-size:16px; border:none; border-radius:8px; background:#22c55e; color:white; font-weight:bold; width:220px;">MASUK</button>
+  <p id="salahPass" style="color:#ff6b6b; display:none; margin:0;">Password salah bro!</p>
+</div>
+
+<script>
+function cekPass(){
+  // GANTI PASSWORD DI SINI BRO
+  var passwordBenar = "dik123";
+  var input = document.getElementById('passKasir').value;
+  if(input === passwordBenar){
+    document.getElementById('lockKasir').style.display = 'none';
+    sessionStorage.setItem('sudahLoginKasir','ya');
+  } else {
+    document.getElementById('salahPass').style.display = 'block';
+  }
+}
+// Biar kalo refresh gak disuruh login lagi selama browser belum ditutup
+if(sessionStorage.getItem('sudahLoginKasir') === 'ya'){
+  document.getElementById('lockKasir').style.display = 'none';
+}
+document.getElementById('passKasir').addEventListener('keyup', function(e){ if(e.key === 'Enter'){ cekPass(); } });
+</script>
 <div class="header"><b>🧾 TOKO <span>DIK'S</span> | KASIR</b><div><span id="jam" style="font-size:12px"></span> <button type="button" onclick="location.reload()" style="background:#333;color:#fff;padding:8px 14px">🔄 Refresh</button></div></div>
 <div class="wrap">
 <button type="button" id="btnInstall" onclick="installApp()">📲 INSTALL APLIKASI KASIR</button>
