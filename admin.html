@@ -21,12 +21,27 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}.modal>div{background:#fff;border-radius:20px;padding:22px;width:100%;max-width:600px;margin:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}.form2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.form2 .full{grid-column:1/-1}
 .kurir-item{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .tab-kurir{display:flex;gap:8px;margin:12px 0}.tab-kurir button{flex:1;padding:10px;border-radius:10px;background:#f1f5f9;font-size:13px}.tab-kurir button.active{background:#16a34a;color:#fff}
-@media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}.form2{grid-template-columns:1fr}}
+.rekap3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.rekap3 div{background:#f8fafc;border-radius:12px;padding:12px;text-align:center}.rekap3 b{font-size:18px;display:block}
+@media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}.form2{grid-template-columns:1fr}.rekap3{grid-template-columns:1fr}}
 </style></head><body>
 <div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:40px">🔒</div><h2>LOGIN ADMIN</h2><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn-merah" onclick="loginAdmin()">MASUK</button><p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
 <div id="isiAdmin" style="display:none">
 <div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge" id="status">Menghubungkan...</span><button class="btn-kurir" onclick="bukaPerintah()">🛵 Perintah Kurir</button><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
-<div class="wrap"><div class="grid2">
+<div class="wrap">
+
+<!-- BARU: REKAP KASIR PINDAHAN DARI KASIR -->
+<div class="card" style="border:2px solid #16a34a"><h3>📊 Rekap Kasir Hari Ini - <span id="tglRekap"></span></h3>
+<div class="rekap3"><div><small>💰 MASUK HARI INI</small><b id="rekMasuk" style="color:#16a34a">Rp 0</b></div><div><small>💸 KELUAR HARI INI</small><b id="rekKeluar" style="color:#dc2626">Rp 0</b></div><div><small>📦 TOTAL STOK</small><b id="rekStok">0 pcs</b></div></div>
+<div style="font-size:14px;line-height:2;margin-top:12px"><div style="display:flex;justify-content:space-between"><span>Pemasukan (LUNAS)</span><b id="rMasuk" style="color:#16a34a">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Pengeluaran</span><b id="rKeluar" style="color:#dc2626">Rp 0</b></div><div style="display:flex;justify-content:space-between;border-top:1px dashed #ccc;padding-top:6px"><span>UNTUNG BERSIH</span><b id="rBersih">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Tagihan Belum Dibayar</span><b id="rTagihan">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Jumlah Transaksi</span><b id="rJml">0x</b></div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button type="button" onclick="downloadBackup()" style="background:#16a34a;color:#fff;flex:1">⬇️ BACKUP HARI INI</button><button type="button" onclick="downloadBackupStok()" style="background:#2563eb;color:#fff;flex:1">📦 BACKUP STOK</button></div>
+<div style="margin-top:14px"><label style="font-size:12px;font-weight:800">📅 LIHAT REKAP TANGGAL LAIN</label><div style="display:flex;gap:8px"><input type="date" id="tglPilih" style="margin:0"><button type="button" onclick="loadRekapTanggal()" style="background:#111;color:#fff;width:140px;margin:0">🔍 LIHAT</button></div><div id="hasilTanggal" style="margin-top:10px;font-size:14px"></div></div>
+</div>
+<div class="card"><h3>🧾 Transaksi Kasir Hari Ini</h3><div id="listTransaksi">Memuat...</div></div>
+<div class="card"><h3>💸 Pengeluaran Hari Ini</h3><div id="listKeluarAdmin">Memuat...</div></div>
+<div class="card"><h3>📦 Stok Menipis (Sisa &lt;= 3)</h3><div id="listStokTipis">Memuat...</div></div>
+<!-- AKHIR REKAP KASIR -->
+
+<div class="grid2">
 <div>
 <div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><textarea id="promoInput" rows="3"></textarea><label style="font-size:12px"><input type="checkbox" id="promoAktif" checked style="width:auto"> Tampilkan Promo</label><button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button><p id="promoStatus" style="font-size:12px;color:#16a34a;text-align:center"></p></div>
 <div class="card"><h3>➕ Tambah Barang</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div><input id="varianBaru" placeholder="Varian"><select id="katPilih"></select><input id="fotoBaru" placeholder="Link foto"><button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
@@ -120,7 +135,41 @@ db.collection("pengiriman").orderBy("waktu","desc").onSnapshot(snap=>{
   document.getElementById("jmlOrder").innerText=j;
 });
 async function hapusOrder(id){if(confirm("Hapus perintah ini?")) await db.collection("pengiriman").doc(id).delete();}
-db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";render();});
+
+// ===== BARU: REKAP KASIR + BACKUP =====
+document.getElementById("tglRekap").innerText=new Date().toLocaleDateString("id-ID");
+function downloadFile(namaFile, isi){ let blob=new Blob([isi],{type:'text/plain'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=namaFile; document.body.appendChild(a); a.click(); a.remove(); }
+async function downloadBackup(){
+  let today=new Date().toISOString().slice(0,10); let tglStr=new Date().toLocaleDateString("id-ID");
+  let isi="BACKUP TOKO DIK'S - "+tglStr+"\n================================\n\n"; let totalMasuk=0,totalKeluar=0,totalTagihan=0;
+  let snapT=await db.collection("transaksi").where("tgl","==",today).get();
+  isi+="TRANSAKSI HARI INI ("+snapT.size+" transaksi)\n"; snapT.forEach(d=>{let t=d.data(); isi+="- "+t.tanggal+" | "+t.metode+" | "+t.items+" | Total Rp "+t.total.toLocaleString("id-ID")+"\n"; if(t.metode==="TAGIHAN") totalTagihan+=t.total; else totalMasuk+=t.total; });
+  isi+="\nPENGELUARAN HARI INI\n"; let snapK=await db.collection("pengeluaran").where("tgl","==",today).get();
+  snapK.forEach(d=>{let t=d.data(); isi+="- "+t.tanggal+" | "+t.kat+" | "+t.nama+" | Rp "+t.nominal.toLocaleString("id-ID")+"\n"; totalKeluar+=t.nominal; });
+  isi+="\n================================\nPemasukan: Rp "+totalMasuk.toLocaleString("id-ID")+"\nPengeluaran: Rp "+totalKeluar.toLocaleString("id-ID")+"\nTagihan: Rp "+totalTagihan.toLocaleString("id-ID")+"\nUntung Bersih: Rp "+(totalMasuk-totalKeluar).toLocaleString("id-ID")+"\n";
+  downloadFile("backup-tokodiks-"+today+".txt", isi); alert("Backup hari ini berhasil di-download!");
+}
+async function downloadBackupStok(){
+  let isi="BACKUP STOK TOKO DIK'S - "+new Date().toLocaleDateString("id-ID")+"\n================================\n\nNama Barang | Harga | Stok | Barcode\n";
+  produk.forEach(p=>{ isi+=p.nama+" | Rp "+p.harga.toLocaleString("id-ID")+" | "+p.stok+" pcs | "+(p.barcode||"-")+"\n"; });
+  isi+="\nTotal Jenis: "+produk.length+"\nTotal Stok: "+produk.reduce((s,p)=>s+(p.stok||0),0)+" pcs\n";
+  downloadFile("backup-stok-tokodiks-"+new Date().toISOString().slice(0,10)+".txt", isi); alert("Backup stok berhasil!");
+}
+function loadRekapKasir(){
+  let today=new Date().toISOString().slice(0,10);
+  db.collection("transaksi").where("tgl","==",today).onSnapshot(s=>{ let masuk=0,tagihan=0,jml=0; s.forEach(d=>{let t=d.data(); if(t.metode==="TAGIHAN") tagihan+=t.total; else masuk+=t.total; jml++; }); document.getElementById("rekMasuk").innerText="Rp "+masuk.toLocaleString("id-ID"); document.getElementById("rMasuk").innerText="Rp "+masuk.toLocaleString("id-ID"); document.getElementById("rTagihan").innerText="Rp "+tagihan.toLocaleString("id-ID"); document.getElementById("rJml").innerText=jml+"x"; let keluar=parseInt((document.getElementById("rKeluar").innerText||"0").replace(/\D/g,""))||0; document.getElementById("rBersih").innerText="Rp "+(masuk-keluar).toLocaleString("id-ID"); let html=""; s.forEach(d=>{let t=d.data(); html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.items}</b><br><small>${t.tanggal} - ${t.metode} - Rp ${t.total.toLocaleString("id-ID")}</small></div>`;}); document.getElementById("listTransaksi").innerHTML=html||"Belum ada transaksi"; });
+  db.collection("pengeluaran").where("tgl","==",today).onSnapshot(s=>{ let keluar=0,html=""; s.forEach(d=>{let t=d.data(); keluar+=t.nominal; html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.nama}</b> - Rp ${t.nominal.toLocaleString("id-ID")}<br><small>${t.kat} - ${t.tanggal}</small></div>`;}); document.getElementById("rekKeluar").innerText="Rp "+keluar.toLocaleString("id-ID"); document.getElementById("rKeluar").innerText="Rp "+keluar.toLocaleString("id-ID"); document.getElementById("listKeluarAdmin").innerHTML=html||"Belum ada pengeluaran"; });
+}
+async function loadRekapTanggal(){
+  let tgl=document.getElementById("tglPilih").value; if(!tgl) return alert("Pilih tanggal dulu!");
+  let snapT=await db.collection("transaksi").where("tgl","==",tgl).get(); let snapK=await db.collection("pengeluaran").where("tgl","==",tgl).get();
+  let masuk=0,tagihan=0,keluar=0; snapT.forEach(d=>{let t=d.data(); if(t.metode==="TAGIHAN") tagihan+=t.total; else masuk+=t.total;}); snapK.forEach(d=>{keluar+=d.data().nominal;});
+  document.getElementById("hasilTanggal").innerHTML=`<b>Tanggal ${tgl}</b><br>Masuk: <b style="color:#16a34a">Rp ${masuk.toLocaleString("id-ID")}</b><br>Keluar: <b style="color:#dc2626">Rp ${keluar.toLocaleString("id-ID")}</b><br>Tagihan: <b>Rp ${tagihan.toLocaleString("id-ID")}</b><br>Untung Bersih: <b>Rp ${(masuk-keluar).toLocaleString("id-ID")}</b><br>Transaksi: ${snapT.size}x`;
+}
+loadRekapKasir();
+// ===== AKHIR REKAP =====
+
+db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";document.getElementById("rekStok").innerText=produk.reduce((a,p)=>a+(p.stok||0),0)+" pcs";let tipis=produk.filter(p=>(p.stok||0)<=3);document.getElementById("listStokTipis").innerHTML=tipis.length? tipis.map(p=>`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${p.nama}</b> - Sisa <b style="color:#dc2626">${p.stok}</b></div>`).join("") : "Semua stok aman!";render();});
 async function simpan(p){await db.collection("toko").doc("produk").set({list:produk});if(p)alert(p);}
 function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return;if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";render();}
 function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});simpan("BERHASIL!");}
