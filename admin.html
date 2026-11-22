@@ -4,7 +4,7 @@
 <style>*{box-sizing:border-box;font-family:Inter,Arial}body{background:#f1f5f9;margin:0;padding:0}
 .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:19px}.header b span{color:#dc2626}.badge{background:#dcfce7;color:#15803d;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
 .btn-logout{background:#111;color:#fff;border:0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}.btn-pass{background:#f1f5f9;color:#111;border:1px solid #e2e8f0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}
-.wrap{max-width:1200px;margin:0 auto;padding:20px}.grid2{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+.wrap{max-width:1350px;margin:0 auto;padding:20px}.grid2{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
 .card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0;margin-bottom:16px}.card h3{margin:0 0 12px;font-size:16px}
 input,select,textarea{width:100%;padding:11px 12px;margin:5px 0;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc;outline:none}
 button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer}
@@ -17,40 +17,36 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 .login-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.login-box{background:#fff;padding:28px;border-radius:20px;width:100%;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
 .popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99;padding:16px;align-items:center;justify-content:center}.popup>div{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px}
 .order-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
-@media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.form2 .full{grid-column:1/-1}
+@media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}.form2{grid-template-columns:1fr}}
 </style></head><body>
 <div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:40px">🔒</div><h2>LOGIN ADMIN</h2><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn-merah" onclick="loginAdmin()">MASUK</button><p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
 <div id="isiAdmin" style="display:none">
 <div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center"><span class="badge" id="status">Menghubungkan...</span><a href="kurir.html" target="_blank" style="background:#16a34a;color:#fff;padding:8px 14px;border-radius:20px;font-weight:800;font-size:13px;text-decoration:none">🛵 Buka App Kurir</a><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
-<div class="wrap"><div class="grid2"><div>
-
+<div class="wrap"><div class="grid2">
+<div>
 <div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><textarea id="promoInput" rows="3"></textarea><label style="font-size:12px"><input type="checkbox" id="promoAktif" checked style="width:auto"> Tampilkan Promo</label><button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button><p id="promoStatus" style="font-size:12px;color:#16a34a;text-align:center"></p></div>
-
-<!-- KIRIM PERINTAH KE KURIR -->
-<div class="card" style="border:2px solid #16a34a"><h3>🛵 Perintah Pengantaran ke Kurir</h3>
-<input id="namaPenerima" placeholder="Nama Penerima * contoh: Wawan">
-<input id="waPenerima" placeholder="No WA Penerima * contoh: 08123456789">
-<textarea id="alamatPenerima" rows="3" placeholder="Alamat Lengkap * contoh: Kp Pakenjeng, Cikajang, depan masjid"></textarea>
-<textarea id="pesananKurir" rows="3" placeholder="Pesanan * contoh: 2 Mie Instan + 1 Kopi"></textarea>
-<select id="tipeBayar">
-<option value="NON COD">NON COD - Sudah Dibayar</option>
-<option value="COD">COD - Bayar di Tempat</option>
-<option value="RETURN">RETURN - Barang Balik</option>
-</select>
-<input id="totalCOD" type="number" placeholder="💰 Jumlah COD yang harus ditagih - contoh: 50000">
-<input id="ongkirKurir" type="number" placeholder="Ongkir (opsional) contoh: 5000">
-<input id="namaKurir" placeholder="Nama Kurir yang ditugaskan (opsional)">
-<button style="background:#16a34a;color:#fff;width:100%;padding:12px;font-size:14px" onclick="kirimKeKurir()">🚀 KIRIM PERINTAH KE KURIR</button>
-<p style="font-size:11px;color:#64748b;text-align:center;margin:6px 0 0">Kurir langsung dapat di aplikasi kurirnya!</p></div>
-
 <div class="card"><h3>➕ Tambah Barang</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div><input id="varianBaru" placeholder="Varian"><select id="katPilih"></select><input id="fotoBaru" placeholder="Link foto"><button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
 <div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div>
 </div>
-
 <div>
+<div class="card" style="border:2px solid #16a34a"><h3>🛵 Perintah Pengantaran ke Kurir <span style="font-size:12px;color:#64748b;font-weight:400">- Isi disini, langsung masuk ke HP kurir</span></h3>
+<div class="form2">
+<input id="namaPenerima" placeholder="Nama Penerima * contoh: Wawan">
+<input id="waPenerima" placeholder="No WA Penerima * contoh: 08123456789">
+<textarea id="alamatPenerima" rows="3" class="full" placeholder="Alamat Lengkap * contoh: Kp Pakenjeng, Cikajang, depan masjid"></textarea>
+<textarea id="pesananKurir" rows="3" class="full" placeholder="Pesanan * contoh: 2 Mie Instan + 1 Kopi"></textarea>
+<select id="tipeBayar"><option value="NON COD">NON COD - Sudah Dibayar</option><option value="COD">COD - Bayar di Tempat</option><option value="RETURN">RETURN - Barang Balik</option></select>
+<input id="totalCOD" type="number" placeholder="💰 Jumlah COD yang harus ditagih - contoh: 50000">
+<input id="ongkirKurir" type="number" placeholder="Ongkir (opsional) contoh: 5000">
+<input id="namaKurir" placeholder="Nama Kurir yang ditugaskan (opsional)">
+</div>
+<button style="background:#16a34a;color:#fff;width:100%;padding:13px;font-size:15px;margin-top:8px" onclick="kirimKeKurir()">🚀 KIRIM PERINTAH KE KURIR</button>
+<p style="font-size:11px;color:#64748b;text-align:center;margin:6px 0 0">Kurir langsung dapat di aplikasi kurirnya!</p></div>
 <div class="card"><h3>📦 Daftar Pengantaran - Status Kurir <span id="jmlOrder" style="background:#111;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px">0</span></h3><div id="listOrder">Memuat...</div></div>
 <div class="card" style="padding:0;overflow:hidden"><div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div><table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table></div>
-</div></div></div></div>
+</div>
+</div></div></div>
 <div class="popup" id="popPass"><div><h3>🔑 Ganti Password</h3><input id="passLama" type="password" placeholder="Password lama"><input id="passBaru" type="password" placeholder="Password baru"><input id="passBaru2" type="password" placeholder="Ulangi"><div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div><p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
 <script>
 const USER_BENAR="diks";function getPass(){return localStorage.getItem("passAdminDiks")||"diks12345";}
@@ -75,10 +71,10 @@ async function kirimKeKurir(){
   let tipe=document.getElementById("tipeBayar").value;
   let totalCOD=parseInt(document.getElementById("totalCOD").value)||0;
   let kurir=document.getElementById("namaKurir").value.trim()||"Semua Kurir";
-  if(!nama||!wa||!alamat||!pesanan) return alert("ISI SEMUA YANG ADA * DULU BRO!\nNama, No WA, Alamat, Pesanan wajib!");
+  if(!nama||!wa||!alamat||!pesanan) return alert("ISI SEMUA YANG ADA * DULU BRO!");
   if(tipe==="COD" && totalCOD<=0) return alert("Kalo COD, isi Jumlah COD yang harus ditagih! Contoh: 50000");
   await db.collection("pengiriman").add({nama:nama,wa:formatWA(wa),waAsli:wa,alamat:alamat,pesanan:pesanan,ongkir:ongkir,tipe:tipe,totalCOD:totalCOD,kurir:kurir,status:"BARU",waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID")});
-  alert("🚀 BERHASIL! Perintah dikirim ke kurir!\n\nKe: "+nama+"\nAlamat: "+alamat+"\nTipe: "+tipe+"\nCOD yang ditagih: Rp "+totalCOD.toLocaleString("id-ID"));
+  alert("🚀 BERHASIL! Perintah dikirim ke kurir!\n\nKe: "+nama+"\nAlamat: "+alamat+"\nTipe: "+tipe+"\nCOD: Rp "+totalCOD.toLocaleString("id-ID"));
   document.getElementById("namaPenerima").value="";document.getElementById("waPenerima").value="";document.getElementById("alamatPenerima").value="";document.getElementById("pesananKurir").value="";document.getElementById("ongkirKurir").value="";document.getElementById("totalCOD").value="";
 }
 db.collection("pengiriman").orderBy("waktu","desc").onSnapshot(snap=>{
