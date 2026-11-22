@@ -5,7 +5,7 @@
 .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:19px}.header b span{color:#dc2626}.badge{background:#dcfce7;color:#15803d;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
 .btn-logout{background:#111;color:#fff;border:0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}.btn-pass{background:#f1f5f9;color:#111;border:1px solid #e2e8f0;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;font-size:13px}
 .wrap{max-width:1200px;margin:0 auto;padding:20px}.grid2{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
-.card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0}.card h3{margin:0 0 12px;font-size:16px}
+.card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0;margin-bottom:16px}.card h3{margin:0 0 12px;font-size:16px}
 input,select,textarea{width:100%;padding:11px 12px;margin:5px 0;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc;outline:none}
 button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer}
 .btn-merah{background:#dc2626;color:#fff;width:100%}.btn-hitam{background:#0f172a;color:#fff;width:100%}.btn-hijau{background:#16a34a;color:#fff;padding:8px 14px;font-size:13px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:8px 12px;font-size:13px}
@@ -16,52 +16,88 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 .foto-label{display:inline-block;background:#f1f5f9;padding:7px 10px;border-radius:8px;font-size:12px;cursor:pointer;border:1px dashed #cbd5e1}
 .login-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.login-box{background:#fff;padding:28px;border-radius:20px;width:100%;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
 .popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99;padding:16px;align-items:center;justify-content:center}.popup>div{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px}
+.order-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
 @media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}}
 </style></head><body>
-<div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:40px">🔒</div><h2 style="margin:8px 0 4px">LOGIN ADMIN</h2><p style="color:#64748b;font-size:13px;margin:0 0 14px">Hanya Pemilik Toko Dik's</p><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn-merah" onclick="loginAdmin()">MASUK</button><p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
+<div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:40px">🔒</div><h2>LOGIN ADMIN</h2><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn-merah" onclick="loginAdmin()">MASUK</button><p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
 <div id="isiAdmin" style="display:none">
-<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center"><span class="badge" id="status">Menghubungkan...</span><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
+<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center"><span class="badge" id="status">Menghubungkan...</span><a href="kurir.html" target="_blank" style="background:#16a34a;color:#fff;padding:8px 14px;border-radius:20px;font-weight:800;font-size:13px;text-decoration:none">🛵 Buka App Kurir</a><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
 <div class="wrap"><div class="grid2"><div>
-<div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><p style="font-size:12px;color:#64748b;margin:0 0 6px">Ketik promo, klik SIMPAN, langsung berubah di toko!</p><textarea id="promoInput" rows="4" placeholder="Beli 2 Mie Gratis 1 Kopi!"></textarea><label style="font-size:12px"><input type="checkbox" id="promoAktif" checked style="width:auto"> Tampilkan Promo di Toko</label><button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button><p id="promoStatus" style="font-size:12px;color:#16a34a;text-align:center;margin:6px 0 0"></p></div>
-<div class="card"><h3>➕ Tambah Barang</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div><input id="varianBaru" placeholder="Varian (opsional)"><select id="katPilih"></select><input id="fotoBaru" placeholder="Link foto (opsional)"><button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
-<div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div></div>
-<div class="card" style="padding:0;overflow:hidden"><div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div><table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table></div></div></div></div>
-<div class="popup" id="popPass"><div><h3 style="margin:0">🔑 Ganti Password</h3><input id="passLama" type="password" placeholder="Password lama"><input id="passBaru" type="password" placeholder="Password baru"><input id="passBaru2" type="password" placeholder="Ulangi password baru"><div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div><p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
+
+<div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><textarea id="promoInput" rows="3"></textarea><label style="font-size:12px"><input type="checkbox" id="promoAktif" checked style="width:auto"> Tampilkan Promo</label><button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button><p id="promoStatus" style="font-size:12px;color:#16a34a;text-align:center"></p></div>
+
+<!-- KIRIM PERINTAH KE KURIR -->
+<div class="card" style="border:2px solid #16a34a"><h3>🛵 Perintah Pengantaran ke Kurir</h3>
+<input id="namaPenerima" placeholder="Nama Penerima * contoh: Wawan">
+<input id="waPenerima" placeholder="No WA Penerima * contoh: 08123456789">
+<textarea id="alamatPenerima" rows="3" placeholder="Alamat Lengkap * contoh: Kp Pakenjeng, Cikajang, depan masjid"></textarea>
+<textarea id="pesananKurir" rows="3" placeholder="Pesanan * contoh: 2 Mie Instan + 1 Kopi"></textarea>
+<select id="tipeBayar">
+<option value="NON COD">NON COD - Sudah Dibayar</option>
+<option value="COD">COD - Bayar di Tempat</option>
+<option value="RETURN">RETURN - Barang Balik</option>
+</select>
+<input id="totalCOD" type="number" placeholder="💰 Jumlah COD yang harus ditagih - contoh: 50000">
+<input id="ongkirKurir" type="number" placeholder="Ongkir (opsional) contoh: 5000">
+<input id="namaKurir" placeholder="Nama Kurir yang ditugaskan (opsional)">
+<button style="background:#16a34a;color:#fff;width:100%;padding:12px;font-size:14px" onclick="kirimKeKurir()">🚀 KIRIM PERINTAH KE KURIR</button>
+<p style="font-size:11px;color:#64748b;text-align:center;margin:6px 0 0">Kurir langsung dapat di aplikasi kurirnya!</p></div>
+
+<div class="card"><h3>➕ Tambah Barang</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div><input id="varianBaru" placeholder="Varian"><select id="katPilih"></select><input id="fotoBaru" placeholder="Link foto"><button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
+<div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div>
+</div>
+
+<div>
+<div class="card"><h3>📦 Daftar Pengantaran - Status Kurir <span id="jmlOrder" style="background:#111;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px">0</span></h3><div id="listOrder">Memuat...</div></div>
+<div class="card" style="padding:0;overflow:hidden"><div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div><table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table></div>
+</div></div></div></div>
+<div class="popup" id="popPass"><div><h3>🔑 Ganti Password</h3><input id="passLama" type="password" placeholder="Password lama"><input id="passBaru" type="password" placeholder="Password baru"><input id="passBaru2" type="password" placeholder="Ulangi"><div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div><p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
 <script>
 const USER_BENAR="diks";function getPass(){return localStorage.getItem("passAdminDiks")||"diks12345";}
 function cekLogin(){if(localStorage.getItem("loginAdminDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}}cekLogin();
-function loginAdmin(){let u=document.getElementById("user").value;let p=document.getElementById("pass").value;if(u===USER_BENAR&&p===getPass()){localStorage.setItem("loginAdminDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}else{document.getElementById("pesanLogin").innerText="Username / Password salah!";}}
+function loginAdmin(){let u=document.getElementById("user").value;let p=document.getElementById("pass").value;if(u===USER_BENAR&&p===getPass()){localStorage.setItem("loginAdminDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}else{document.getElementById("pesanLogin").innerText="Salah!";}}
 function logoutAdmin(){localStorage.removeItem("loginAdminDiks");location.reload();}
 function bukaGantiPass(){document.getElementById("popPass").style.display="flex";}function tutupPass(){document.getElementById("popPass").style.display="none";}
-function simpanPassBaru(){let lama=document.getElementById("passLama").value;let baru=document.getElementById("passBaru").value;let baru2=document.getElementById("passBaru2").value;if(lama!==getPass()){document.getElementById("pesanPass").innerText="Password lama salah!";return;}if(baru.length<4){document.getElementById("pesanPass").innerText="Password minimal 4!";return;}if(baru!==baru2){document.getElementById("pesanPass").innerText="Password gak sama!";return;}localStorage.setItem("passAdminDiks",baru);alert("BERHASIL! Password baru: "+baru);tutupPass();}
+function simpanPassBaru(){let lama=document.getElementById("passLama").value;let baru=document.getElementById("passBaru").value;let baru2=document.getElementById("passBaru2").value;if(lama!==getPass()){document.getElementById("pesanPass").innerText="Password lama salah!";return;}if(baru.length<4){document.getElementById("pesanPass").innerText="Min 4!";return;}if(baru!==baru2){document.getElementById("pesanPass").innerText="Gak sama!";return;}localStorage.setItem("passAdminDiks",baru);alert("BERHASIL! Password baru: "+baru);tutupPass();}
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
 let produk=[];let kategori=["Makanan","Minuman","Rokok","Sembako"];const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan",varian:""},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman",varian:""},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Rokok",varian:""}];
-// === PROMO FIX: HANYA ISI SEKALI, BIAR GAK NIMPA KETIKAN LU ===
 let promoSudahDimuat=false;
-db.collection("toko").doc("promo").onSnapshot(doc=>{
-  if(promoSudahDimuat) return; // JANGAN TIMPA LAGI KALO UDAH DIMUAT
-  promoSudahDimuat=true;
-  if(doc.exists){let d=doc.data();document.getElementById("promoInput").value=d.text||"";document.getElementById("promoAktif").checked=d.aktif!==false;document.getElementById("promoStatus").innerText="Promo saat ini: "+(d.text||"").substring(0,40);}
-  else{document.getElementById("promoInput").value="Beli 2 Mie Instan, Gratis 1 Kopi Sachet!\nGratis Ongkir area dekat!";document.getElementById("promoAktif").checked=true;}
-});
-async function simpanPromo(){
-  let t=document.getElementById("promoInput").value.trim();
-  let a=document.getElementById("promoAktif").checked;
-  if(!t) return alert("Isi dulu promonya!");
-  document.getElementById("promoStatus").innerText="Menyimpan...";
-  try{
-    await db.collection("toko").doc("promo").set({text:t,aktif:a,updated:Date.now()});
-    document.getElementById("promoStatus").innerText="✅ BERHASIL! Promo udah berubah di toko: "+t.substring(0,50);
-    alert("BERHASIL! Promo baru:\n\n"+t+"\n\nCek di toko pembeli, refresh!");
-  }catch(e){alert("GAGAL SIMPAN: "+e.message);document.getElementById("promoStatus").innerText="❌ Gagal: "+e.message;}
+db.collection("toko").doc("promo").onSnapshot(doc=>{if(promoSudahDimuat)return;promoSudahDimuat=true;if(doc.exists){let d=doc.data();document.getElementById("promoInput").value=d.text||"";document.getElementById("promoAktif").checked=d.aktif!==false;}});
+async function simpanPromo(){let t=document.getElementById("promoInput").value.trim();let a=document.getElementById("promoAktif").checked;if(!t)return alert("Isi dulu!");await db.collection("toko").doc("promo").set({text:t,aktif:a,updated:Date.now()});document.getElementById("promoStatus").innerText="✅ BERHASIL!";alert("Promo tersimpan!");}
+function formatWA(wa){wa=wa.replace(/\D/g,"");if(wa.startsWith("0"))wa="62"+wa.slice(1);return wa;}
+async function kirimKeKurir(){
+  let nama=document.getElementById("namaPenerima").value.trim();
+  let wa=document.getElementById("waPenerima").value.trim();
+  let alamat=document.getElementById("alamatPenerima").value.trim();
+  let pesanan=document.getElementById("pesananKurir").value.trim();
+  let ongkir=parseInt(document.getElementById("ongkirKurir").value)||0;
+  let tipe=document.getElementById("tipeBayar").value;
+  let totalCOD=parseInt(document.getElementById("totalCOD").value)||0;
+  let kurir=document.getElementById("namaKurir").value.trim()||"Semua Kurir";
+  if(!nama||!wa||!alamat||!pesanan) return alert("ISI SEMUA YANG ADA * DULU BRO!\nNama, No WA, Alamat, Pesanan wajib!");
+  if(tipe==="COD" && totalCOD<=0) return alert("Kalo COD, isi Jumlah COD yang harus ditagih! Contoh: 50000");
+  await db.collection("pengiriman").add({nama:nama,wa:formatWA(wa),waAsli:wa,alamat:alamat,pesanan:pesanan,ongkir:ongkir,tipe:tipe,totalCOD:totalCOD,kurir:kurir,status:"BARU",waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID")});
+  alert("🚀 BERHASIL! Perintah dikirim ke kurir!\n\nKe: "+nama+"\nAlamat: "+alamat+"\nTipe: "+tipe+"\nCOD yang ditagih: Rp "+totalCOD.toLocaleString("id-ID"));
+  document.getElementById("namaPenerima").value="";document.getElementById("waPenerima").value="";document.getElementById("alamatPenerima").value="";document.getElementById("pesananKurir").value="";document.getElementById("ongkirKurir").value="";document.getElementById("totalCOD").value="";
 }
+db.collection("pengiriman").orderBy("waktu","desc").onSnapshot(snap=>{
+  let html="";let j=0;
+  snap.forEach(doc=>{
+    let o=doc.data();let id=doc.id;j++;
+    let warna = o.status==="BARU" ? "#fef3c7;color:#92400e" : o.status==="DITERIMA" ? "#dbeafe;color:#1e40af" : o.status==="DIANTAR" ? "#fef9c3;color:#854d0e" : "#dcfce7;color:#15803d";
+    html+=`<div class="order-card"><div style="display:flex;justify-content:space-between;align-items:start"><div><b>👤 ${o.nama}</b> <span style="background:${warna};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${o.status}</span> <span style="background:#f1f5f9;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${o.tipe||"NON COD"}</span><br><small style="color:#64748b">${o.tanggal} • Kurir: ${o.kurir||"-"} ${o.kurirPengantar ? "• Diambil: "+o.kurirPengantar : ""}</small></div><button class="btn-hapus" onclick="hapusOrder('${id}')">🗑️</button></div><p style="font-size:13px;margin:8px 0;line-height:1.5">📍 <b>Alamat:</b> ${o.alamat}<br>📦 <b>Pesanan:</b> ${o.pesanan}<br>💰 <b>TAGIH COD:</b> Rp ${(o.totalCOD||0).toLocaleString("id-ID")} • Ongkir: Rp ${o.ongkir||0}<br>📱 WA: ${o.waAsli||o.wa}</p><div style="display:flex;gap:6px"><a href="https://wa.me/${o.wa}?text=Halo%20${encodeURIComponent(o.nama)}%2C%20pesanan%20dari%20Toko%20Dik's%20sedang%20diantar!" target="_blank" style="background:#16a34a;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:800">💬 WA Penerima</a><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.alamat)}" target="_blank" style="background:#111;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:800">🗺️ Buka Maps</a></div></div>`;
+  });
+  document.getElementById("listOrder").innerHTML=html||"Belum ada pengantaran";
+  document.getElementById("jmlOrder").innerText=j;
+});
+async function hapusOrder(id){if(confirm("Hapus perintah ini?")) await db.collection("pengiriman").doc(id).delete();}
 db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";render();});
 async function simpan(p){await db.collection("toko").doc("produk").set({list:produk});if(p)alert(p);}
-function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return alert("Isi dulu!");if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";render();}
-function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("varianBaru").value="";simpan("BERHASIL! "+n+" udah muncul!");}
+function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return;if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";render();}
+function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value);let s=parseInt(document.getElementById("stokBaru").value)||20;let v=document.getElementById("varianBaru").value.trim();let k=document.getElementById("katPilih").value;let f=document.getElementById("fotoBaru").value.trim()||"https://via.placeholder.com/200?text="+encodeURIComponent(n);if(!n||!h)return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:f,kat:k,varian:v});simpan("BERHASIL!");}
 function render(){document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");document.getElementById("katPilih").innerHTML=kategori.map(k=>`<option>${k}</option>`).join("");let key=(document.getElementById("cari").value||"").toLowerCase();let html="";produk.forEach((p,i)=>{if(key&&!p.nama.toLowerCase().includes(key))return;html+=`<tr><td><div class="produk-info"><img src="${p.img}"><div><b>${p.nama}</b><br><small>${p.varian||"-"}</small></div></div></td><td><span class="chip">${p.kat||"-"}</span></td><td><input class="harga-input" type="number" value="${p.harga}" oninput="produk[${i}].harga=+this.value"></td><td><input class="stok-input" type="number" value="${p.stok??20}" oninput="produk[${i}].stok=+this.value"></td><td><label class="foto-label">📸 Ganti<input type="file" accept="image/*" style="display:none" onchange="upFoto(event,${i})"></label></td><td style="white-space:nowrap"><button class="btn-hijau" onclick="saveOne(${i})">SIMPAN</button> <button class="btn-hapus" onclick="hapus(${i})">🗑️</button></td></tr>`;});document.getElementById("list").innerHTML=html||"<tr><td colspan=6 style='text-align:center'>Belum ada barang</td></tr>";}
-function upFoto(e,i){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{let im=new Image();im.onload=()=>{let c=document.createElement("canvas");let max=400,w=im.width,h=im.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);produk[i].img=c.toDataURL("image/jpeg",0.7);render();alert("Foto berubah, klik SIMPAN!");};im.src=ev.target.result;};r.readAsDataURL(f);}
-async function saveOne(i){await simpan("BERHASIL! "+produk[i].nama+" berubah!");}
+function upFoto(e,i){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{let im=new Image();im.onload=()=>{let c=document.createElement("canvas");let max=400,w=im.width,h=im.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);produk[i].img=c.toDataURL("image/jpeg",0.7);render();};im.src=ev.target.result;};r.readAsDataURL(f);}
+async function saveOne(i){await simpan("BERHASIL!");}
 function hapus(i){if(confirm("Hapus "+produk[i].nama+"?")){produk.splice(i,1);simpan("Dihapus!");}}
 </script></body></html>
