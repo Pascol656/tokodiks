@@ -86,7 +86,7 @@ db.collection("kurir").orderBy("waktu","asc").onSnapshot(snap=>{daftarKurir=[];s
 function refreshPilihKurir(){let s=document.getElementById("pilihKurir");if(!s) return;if(daftarKurir.length===0){s.innerHTML="<option value=''>Belum ada kurir - Daftarkan dulu di Daftar Kurir!</option>";}else{s.innerHTML=daftarKurir.map(k=>`<option value="${k.wa}">${k.nama} - ${k.waAsli||k.wa}</option>`).join("");}}
 function buatPesanWA(o){
 let bayar=o.tipe==="TAGIHAN" ? `Tagihan: Rp ${(o.totalCOD||0).toLocaleString("id-ID")}\nTolong tagih ke penerima ya.` : o.tipe==="RETURN" ? `Barang Return - Ambil barang dari penerima.` : `LUNAS - Sudah dibayar, jangan tagih.`;
-return `Antar Pesanan - Toko Dik's\n\nPenerima: ${o.nama}\nAlamat: ${o.alamat}\nPesanan: ${o.pesanan}\n\n${bayar}\nOngkir: Rp ${(o.ongkir||0).toLocaleString("id-ID")}\n\nTolong segera diantar ya, makasih.`;
+return `Antar Pesanan - Toko Dik's\n\nPenerima: ${o.nama}\nNo WA Penerima: ${o.waAsli||o.wa}\nAlamat: ${o.alamat}\nPesanan: ${o.pesanan}\n\n${bayar}\nOngkir: Rp ${(o.ongkir||0).toLocaleString("id-ID")}\n\nTolong segera diantar ya, makasih.`;
 }
 async function kirimKeKurir(){
   let waKurir=document.getElementById("pilihKurir").value;
