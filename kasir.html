@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KASIR - TOKO DIK'S</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3144/3144456.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>*{box-sizing:border-box;font-family:Inter,Arial}body{background:#f1f5f9;margin:0;padding:0}
+.header{background:#111;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.header b{font-size:18px}.header b span{color:#facc15}
+.wrap{max-width:1000px;margin:0 auto;padding:14px}.grid{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}
+.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;margin-bottom:14px}.card h3{margin:0 0 10px;font-size:15px}
+input,select{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;background:#f8fafc;outline:none;margin:4px 0}
+button{border:0;padding:12px;border-radius:10px;font-weight:800;cursor:pointer}
+.btn-scan{background:#111;color:#fff;flex:1}.btn-bayar{background:#16a34a;color:#fff;width:100%;padding:16px;font-size:18px;margin-top:10px}
+.btn-hapus{background:#fef2f2;color:#dc2626;padding:6px 10px;font-size:12px}
+.produk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.produk-btn{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:left}.produk-btn b{font-size:13px;display:block}.produk-btn small{color:#64748b}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9}.qty-btn{width:32px;height:32px;border-radius:8px;background:#f1f5f9;font-size:16px;padding:0}
+.total-box{background:#111;color:#fff;border-radius:14px;padding:14px;margin-top:10px}.total-box .row{display:flex;justify-content:space-between;margin:4px 0}.total-box .grand{font-size:24px;font-weight:900}
+.kembalian{font-size:22px;font-weight:900;color:#16a34a;text-align:center;margin-top:8px}
+.tab{display:flex;gap:8px;margin-bottom:12px}.tab button{flex:1;background:#e2e8f0}.tab button.active{background:#111;color:#fff}
+.rekap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.rekap div{background:#f8fafc;border-radius:12px;padding:12px;text-align:center}.rekap b{font-size:18px;display:block}
+.login-bg{position:fixed;inset:0;background:#111;display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.login-box{background:#fff;padding:28px;border-radius:20px;width:100%;max-width:340px;text-align:center}
+#reader{width:100%;border-radius:12px;overflow:hidden;display:none;margin-top:10px}
+#btnInstall{display:none;background:#facc15;color:#111;width:100%;margin-bottom:12px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.produk-grid{grid-template-columns:repeat(2,1fr)}.rekap{grid-template-columns:1fr}}
+</style></head><body>
+<div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:44px">🧾</div><h2 style="margin:8px 0">KASIR<br>TOKO DIK'S</h2><p style="color:#64748b;font-size:13px">Masukin PIN Kasir</p><input id="pinInput" type="password" inputmode="numeric" placeholder="PIN - contoh: 1234" style="text-align:center;font-size:22px;letter-spacing:8px"><button style="background:#111;color:#fff;width:100%;margin-top:8px" onclick="loginKasir()">MASUK</button><p id="pinSalah" style="color:#dc2626;font-size:13px"></p><p style="font-size:11px;color:#999">PIN default: 1234</p></div></div>
+
+<div id="isiKasir" style="display:none">
+<div class="header"><b>🧾 TOKO <span>DIK'S</span> | KASIR</b><div style="display:flex;gap:8px;align-items:center"><span id="jam" style="font-size:12px"></span><button onclick="logoutKasir()" style="background:#dc2626;color:#fff;padding:8px 14px">🚪 Keluar</button></div></div>
+<div class="wrap">
+<button id="btnInstall" onclick="installApp()">📲 INSTALL APLIKASI KASIR KE HP / TABLET</button>
+<div class="rekap card" style="margin-bottom:14px"><div><small>💰 PEMASUKAN HARI INI</small><b id="rekMasuk" style="color:#16a34a">Rp 0</b></div><div><small>💸 PENGELUARAN HARI INI</small><b id="rekKeluar" style="color:#dc2626">Rp 0</b></div><div><small>📦 TOTAL STOK</small><b id="rekStok">0 pcs</b></div></div>
+<div class="tab"><button id="btnTabKasir" class="active" onclick="pindahTab('kasir')">🛒 Kasir</button><button id="btnTabKeluar" onclick="pindahTab('keluar')">💸 Pengeluaran</button><button id="btnTabRekap" onclick="pindahTab('rekap')">📊 Rekap</button></div>
+
+<div id="tabKasir">
+<div class="grid"><div>
+<div class="card"><h3>📷 Scan Barcode - Kayak Alfamart</h3>
+<div style="display:flex;gap:8px"><input id="inputBarcode" placeholder="Scan / ketik barcode, lalu ENTER..." autocomplete="off"><button class="btn-scan" onclick="toggleScan()">📷 SCAN</button></div>
+<div id="reader"></div>
+<p style="font-size:11px;color:#64748b;margin:6px 0">Kalo pake alat scan USB, tinggal scan aja otomatis masuk. Kalo pake HP, pencet SCAN lalu arahkan ke barcode.</p>
+<input id="cariBarang" placeholder="🔍 Atau cari nama barang..." oninput="renderProduk()">
+<div class="produk-grid" id="gridProduk"></div>
+</div>
+<div class="card"><h3>➕ Barang Baru / Tambah Barcode</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"><input id="barcodeBaru" placeholder="Barcode"></div><button style="background:#111;color:#fff;width:100%" onclick="tambahBarangKasir()">+ SIMPAN BARANG</button></div>
+</div>
+
+<div><div class="card"><h3>🛒 Barang Yang Dibeli</h3><div id="listCart"><p style="color:#999;font-size:13px;text-align:center">Belum ada barang<br>Scan dulu bro...</p></div>
+<div class="total-box"><div class="row"><span>Total Barang</span><span id="totalItem">0 item</span></div><div class="row"><span>TOTAL</span><span class="grand" id="grandTotal">Rp 0</span></div></div>
+<label style="font-size:12px;font-weight:800">BAYAR *</label><input id="bayarInput" type="number" placeholder="Contoh: 50000" oninput="hitungKembalian()" style="font-size:20px;font-weight:800">
+<div style="display:flex;gap:6px;margin-top:6px"><button onclick="setBayar(10000)" style="flex:1;background:#f1f5f9">10rb</button><button onclick="setBayar(20000)" style="flex:1;background:#f1f5f9">20rb</button><button onclick="setBayar(50000)" style="flex:1;background:#f1f5f9">50rb</button><button onclick="setBayar(100000)" style="flex:1;background:#f1f5f9">100rb</button><button onclick="setPas()" style="flex:1;background:#dcfce7">UANG PAS</button></div>
+<div class="kembalian" id="kembalianText">Kembalian: Rp 0</div>
+<select id="metodeBayar"><option value="TUNAI">💵 TUNAI</option><option value="QRIS">📱 QRIS</option><option value="TAGIHAN">📝 TAGIHAN - Bayar Nanti</option></select>
+<button class="btn-bayar" onclick="prosesBayar()">✅ BAYAR</button>
+<button onclick="batalTransaksi()" style="background:#f1f5f9;width:100%;margin-top:8px">❌ Batalkan Transaksi</button>
+</div></div></div>
+</div>
+
+<div id="tabKeluar" style="display:none"><div class="card"><h3>💸 Input Pengeluaran</h3><input id="namaKeluar" placeholder="Contoh: Beli 1 dus Mie, Listrik, Bensin..."><input id="nominalKeluar" type="number" placeholder="Nominal - contoh: 150000"><select id="katKeluar"><option>BELI BARANG</option><option>LISTRIK / PULSA</option><option>BENSIN / ONGKIR</option><option>GAJI</option><option>LAINNYA</option></select><button style="background:#dc2626;color:#fff;width:100%" onclick="simpanPengeluaran()">💾 SIMPAN PENGELUARAN</button></div><div class="card"><h3>📋 Pengeluaran Hari Ini</h3><div id="listKeluar">Memuat...</div></div></div>
+
+<div id="tabRekap" style="display:none"><div class="card"><h3>📊 Rekap Hari Ini - <span id="tglRekap"></span></h3><div style="font-size:14px;line-height:2"><div style="display:flex;justify-content:space-between"><span>Pemasukan (LUNAS)</span><b id="rMasuk" style="color:#16a34a">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Pengeluaran</span><b id="rKeluar" style="color:#dc2626">Rp 0</b></div><div style="display:flex;justify-content:space-between;border-top:1px dashed #ccc;padding-top:6px"><span>UNTUNG BERSIH HARI INI</span><b id="rBersih">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Tagihan Belum Dibayar</span><b id="rTagihan">Rp 0</b></div><div style="display:flex;justify-content:space-between"><span>Jumlah Transaksi</span><b id="rJml">0x</b></div></div></div><div class="card"><h3>🧾 Transaksi Terakhir</h3><div id="listTransaksi">Memuat...</div></div><div class="card"><h3>📦 Stok Menipis / Habis</h3><div id="listStokTipis">Memuat...</div></div></div>
+
+</div></div>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;document.getElementById('btnInstall').style.display='block';});
+function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('btnInstall').style.display='none';});}else{alert('Di HP: Pencet titik 3 di Chrome > Tambahkan ke Layar Utama');}}
+
+const PIN_KASIR="1234";
+const NAMA_KASIR="Kasir 1";
+function loginKasir(){let p=document.getElementById("pinInput").value;if(p===PIN_KASIR){localStorage.setItem("loginKasirDiks","iya");document.getElementById("loginBox").style.display="none";document.getElementById("isiKasir").style.display="block";document.getElementById("inputBarcode").focus();}else{document.getElementById("pinSalah").innerText="PIN Salah!";}}
+if(localStorage.getItem("loginKasirDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiKasir").style.display="block";}
+function logoutKasir(){localStorage.removeItem("loginKasirDiks");location.reload();}
+function pindahTab(t){["kasir","keluar","rekap"].forEach(x=>{document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).style.display=x===t?"block":"none";document.getElementById("btnTab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);});if(t==="rekap") loadRekap();}
+setInterval(()=>{document.getElementById("jam").innerText=new Date().toLocaleTimeString("id-ID");},1000);
+document.getElementById("tglRekap").innerText=new Date().toLocaleDateString("id-ID");
+
+const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+let produk=[];let cart=[];let html5Qr=null;let isScanning=false;
+
+db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists) produk=doc.data().list||[];renderProduk();updateRekapStok();});
+async function simpanProduk(){await db.collection("toko").doc("produk").set({list:produk});}
+function renderProduk(){let key=(document.getElementById("cariBarang").value||"").toLowerCase();let html="";produk.forEach((p,i)=>{if(key && !p.nama.toLowerCase().includes(key) && !(p.barcode||"").includes(key)) return;html+=`<button class="produk-btn" onclick="tambahKeCart(${i})"><b>${p.nama}</b><small>Rp ${p.harga.toLocaleString("id-ID")} • Stok: ${p.stok} ${p.barcode?`• ${p.barcode}`:""}</small></button>`;});document.getElementById("gridProduk").innerHTML=html||"<p style='font-size:12px;color:#999'>Barang tidak ditemukan</p>";}
+function tambahKeCart(i){let p=produk[i];let ada=cart.find(c=>c.idx===i);if(ada){if(ada.qty>=p.stok) return alert("Stok habis! Sisa "+p.stok);ada.qty++;}else{if(p.stok<=0) return alert("Stok habis!");cart.push({idx:i,nama:p.nama,harga:p.harga,qty:1});}renderCart();document.getElementById("bayarInput").focus();}
+function renderCart(){if(cart.length===0){document.getElementById("listCart").innerHTML="<p style='color:#999;font-size:13px;text-align:center'>Belum ada barang<br>Scan dulu bro...</p>";}else{document.getElementById("listCart").innerHTML=cart.map((c,i)=>`<div class="cart-item"><div><b>${c.nama}</b><br><small>Rp ${c.harga.toLocaleString("id-ID")} x ${c.qty} = <b>Rp ${(c.harga*c.qty).toLocaleString("id-ID")}</b></small></div><div style="display:flex;gap:4px;align-items:center"><button class="qty-btn" onclick="ubahQty(${i},-1)">-</button><b>${c.qty}</b><button class="qty-btn" onclick="ubahQty(${i},1)">+</button><button class="btn-hapus" onclick="hapusCart(${i})">🗑️</button></div></div>`).join("");}
+let total=cart.reduce((s,c)=>s+c.harga*c.qty,0);let jml=cart.reduce((s,c)=>s+c.qty,0);document.getElementById("grandTotal").innerText="Rp "+total.toLocaleString("id-ID");document.getElementById("totalItem").innerText=jml+" item";hitungKembalian();}
+function ubahQty(i,d){let c=cart[i];let p=produk[c.idx];let baru=c.qty+d;if(baru<=0){cart.splice(i,1);}else{if(baru>p.stok) return alert("Stok mentok! Sisa "+p.stok);c.qty=baru;}renderCart();}
+function hapusCart(i){cart.splice(i,1);renderCart();}
+function batalTransaksi(){if(confirm("Batalkan semua?")){cart=[];document.getElementById("bayarInput").value="";renderCart();}}
+function getTotal(){return cart.reduce((s,c)=>s+c.harga*c.qty,0);}
+function setBayar(n){document.getElementById("bayarInput").value=n;hitungKembalian();}
+function setPas(){document.getElementById("bayarInput").value=getTotal();hitungKembalian();}
+function hitungKembalian(){let total=getTotal();let bayar=parseInt(document.getElementById("bayarInput").value)||0;let kembali=bayar-total;document.getElementById("kembalianText").innerText= kembali>=0 ? "Kembalian: Rp "+kembali.toLocaleString("id-ID") : "Kurang: Rp "+Math.abs(kembali).toLocaleString("id-ID");document.getElementById("kembalianText").style.color=kembali>=0?"#16a34a":"#dc2626";}
+async function prosesBayar(){
+if(cart.length===0) return alert("Scan barang dulu!");
+let total=getTotal();let bayar=parseInt(document.getElementById("bayarInput").value)||0;let metode=document.getElementById("metodeBayar").value;
+if(metode==="TAGIHAN"){bayar=0;}else{if(bayar<total) return alert("Uang bayar kurang! Kurang Rp "+(total-bayar).toLocaleString("id-ID"));}
+let kembali= metode==="TAGIHAN"?0:bayar-total;
+let items=cart.map(c=>`${c.qty}x ${c.nama} @${c.harga}`).join(", ");
+cart.forEach(c=>{produk[c.idx].stok-=c.qty;});
+await simpanProduk();
+await db.collection("transaksi").add({items:items,detail:cart,total:total,bayar:bayar,kembalian:kembali,metode:metode,kasir:NAMA_KASIR,waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID"),tgl:new Date().toISOString().slice(0,10)});
+alert(`BERHASIL!\n\nBarang: ${items}\nTotal: Rp ${total.toLocaleString("id-ID")}\nBayar: Rp ${bayar.toLocaleString("id-ID")}\nKembalian: Rp ${kembali.toLocaleString("id-ID")}\n\nStok otomatis berkurang!`);
+cart=[];document.getElementById("bayarInput").value="";renderCart();
+}
+document.getElementById("inputBarcode").addEventListener("keypress",function(e){if(e.key==="Enter"){let kode=this.value.trim();this.value="";cariBarcode(kode);}});
+function cariBarcode(kode){if(!kode) return;let idx=produk.findIndex(p=>(p.barcode||"")===kode);if(idx>=0){tambahKeCart(idx);}else{if(confirm("Barcode "+kode+" belum ada!\nMau daftarkan jadi barang baru?")){document.getElementById("barcodeBaru").value=kode;document.getElementById("namaBaru").focus();window.scrollTo(0,500);}}}
+async function toggleScan(){if(isScanning){await html5Qr.stop();document.getElementById("reader").style.display="none";isScanning=false;return;}document.getElementById("reader").style.display="block";html5Qr=new Html5Qrcode("reader");isScanning=true;html5Qr.start({facingMode:"environment"},{fps:10,qrbox:250},(decoded)=>{cariBarcode(decoded);},{()=>{}}).catch(e=>alert("Kamera gagal: "+e));}
+async function tambahBarangKasir(){let n=document.getElementById("namaBaru").value.trim();let h=parseInt(document.getElementById("hargaBaru").value)||0;let s=parseInt(document.getElementById("stokBaru").value)||0;let b=document.getElementById("barcodeBaru").value.trim();if(!n||!h) return alert("Nama + Harga wajib!");produk.push({nama:n,harga:h,stok:s,img:"",kat:"Umum",varian:"",barcode:b});await simpanProduk();document.getElementById("namaBaru").value="";document.getElementById("hargaBaru").value="";document.getElementById("stokBaru").value="";document.getElementById("barcodeBaru").value="";alert("Barang ditambahkan! Sekarang bisa di-scan.");}
+async function simpanPengeluaran(){let n=document.getElementById("namaKeluar").value.trim();let nom=parseInt(document.getElementById("nominalKeluar").value)||0;let kat=document.getElementById("katKeluar").value;if(!n||!nom) return alert("Isi nama + nominal!");await db.collection("pengeluaran").add({nama:n,nominal:nom,kat:kat,kasir:NAMA_KASIR,waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID"),tgl:new Date().toISOString().slice(0,10)});document.getElementById("namaKeluar").value="";document.getElementById("nominalKeluar").value="";alert("Pengeluaran tersimpan!");}
+function updateRekapStok(){let totalStok=produk.reduce((s,p)=>s+(p.stok||0),0);document.getElementById("rekStok").innerText=totalStok+" pcs";}
+function loadRekap(){let today=new Date().toISOString().slice(0,10);db.collection("transaksi").where("tgl","==",today).onSnapshot(s=>{let masuk=0,tagihan=0,jml=0;s.forEach(d=>{let t=d.data();if(t.metode==="TAGIHAN") tagihan+=t.total; else masuk+=t.total; jml++;});document.getElementById("rekMasuk").innerText="Rp "+masuk.toLocaleString("id-ID");document.getElementById("rMasuk").innerText="Rp "+masuk.toLocaleString("id-ID");document.getElementById("rTagihan").innerText="Rp "+tagihan.toLocaleString("id-ID");document.getElementById("rJml").innerText=jml+"x";let keluar=parseInt((document.getElementById("rKeluar").innerText||"0").replace(/\D/g,""))||0;document.getElementById("rBersih").innerText="Rp "+(masuk-keluar).toLocaleString("id-ID");
+let html="";s.forEach(d=>{let t=d.data();html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.items}</b><br><small>${t.tanggal} • ${t.metode} • Rp ${t.total.toLocaleString("id-ID")} • Bayar Rp ${t.bayar.toLocaleString("id-ID")} • Kembali Rp ${t.kembalian.toLocaleString("id-ID")}</small></div>`;});document.getElementById("listTransaksi").innerHTML=html||"Belum ada transaksi";});
+db.collection("pengeluaran").where("tgl","==",today).onSnapshot(s=>{let keluar=0;let html="";s.forEach(d=>{let t=d.data();keluar+=t.nominal;html+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${t.nama}</b> - Rp ${t.nominal.toLocaleString("id-ID")}<br><small>${t.kat} • ${t.tanggal}</small></div>`;});document.getElementById("rekKeluar").innerText="Rp "+keluar.toLocaleString("id-ID");document.getElementById("rKeluar").innerText="Rp "+keluar.toLocaleString("id-ID");document.getElementById("listKeluar").innerHTML=html||"Belum ada pengeluaran";});
+let tipis=produk.filter(p=>(p.stok||0)<=3);document.getElementById("listStokTipis").innerHTML=tipis.length? tipis.map(p=>`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><b>${p.nama}</b> - Sisa <b style="color:#dc2626">${p.stok}</b> • Rp ${p.harga.toLocaleString("id-ID")}</div>`).join("") : "Semua stok aman!";
+}
+loadRekap();
+</script></body></html>
