@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kurir - TOKO DIK'S</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kurir Dik's">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/744/744465.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#f8f9fa;padding-bottom:90px;color:#222}
+.top{padding:20px 16px 8px;background:#fff}.top h1{margin:0;font-size:26px;font-weight:900}
+.search{display:flex;align-items:center;background:#fff;border:1.5px solid #e3f2fd;border-radius:30px;padding:12px 16px;margin:14px 16px;gap:10px}.search input{border:0;outline:none;width:100%;font-size:17px}.search input::placeholder{color:#999}
+.filter{display:flex;gap:8px;overflow-x:auto;padding:4px 16px;scrollbar-width:none}.filter::-webkit-scrollbar{display:none}.filter button{white-space:nowrap;padding:10px 20px;border-radius:30px;border:0;background:#f1f3f5;font-weight:700;font-size:15px;cursor:pointer}.filter button.active{background:#0d5aa7;color:#fff}
+.list{padding:12px 16px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;border:1px solid #f0f0f0}.card-top{display:flex;justify-content:space-between;align-items:center}.card-top small{color:#999;font-size:13px}.badge-cod{font-size:13px;font-weight:800;padding:6px 12px;border-radius:8px}.badge-non{background:#e6f7e6;color:#1a9a4a}.badge-cod2{background:#fff3cd;color:#b7791f}.badge-return{background:#ffe8e8;color:#d32f2f}.kode{font-size:19px;font-weight:900;margin:10px 0 8px}.row{display:flex;gap:8px;align-items:flex-start;margin-top:8px}.row small{font-size:14px;line-height:1.4;color:#666}.row b{font-size:15px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;display:flex;padding:10px 0 14px;z-index:20}.bottom button{flex:1;background:none;border:0;cursor:pointer;color:#aaa;font-weight:700;font-size:13px}.bottom button.active{color:#0d5aa7}.bottom button div{font-size:26px;line-height:1}
+.login{position:fixed;top:0;left:0;right:0;bottom:0;background:#0d5aa7;display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}.login>div{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:360px;text-align:center}.login input{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:14px}
+.detail{position:fixed;top:0;left:0;right:0;bottom:0;background:#f8f9fa;z-index:50;display:none;overflow:auto;padding:0}.detail-top{background:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;border-bottom:1px solid #eee}.detail-top button{background:#f1f3f5;border:0;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer}.detail-body{padding:16px;max-width:600px;margin:0 auto}
+.tagih-box{background:#fff3cd;border:2px solid #f59e0b;border-radius:16px;padding:16px;text-align:center;margin:12px 0}.tagih-box small{color:#92400e;font-weight:700}.tagih-box b{font-size:32px;color:#111;display:block;margin-top:4px}
+.lunas-box{background:#e6f7e6;border:2px solid #16a34a;border-radius:16px;padding:16px;text-align:center;margin:12px 0}.lunas-box b{font-size:20px;color:#15803d}
+.alamat-box{background:#fff;border:1px solid #eee;border-radius:16px;padding:16px;margin:12px 0}
+.btn{width:100%;padding:13px;border:0;border-radius:12px;font-weight:900;cursor:pointer;margin-top:8px;font-size:14px}.btn-terima{background:#0d5aa7;color:#fff}.btn-antar{background:#f59e0b;color:#fff}.btn-selesai{background:#16a34a;color:#fff}.btn-wa{background:#fff;border:1px solid #ddd!important}.btn-maps{background:#111;color:#fff}
+.install-bar{display:none;background:#0d5aa7;color:#fff;padding:12px;text-align:center;font-weight:800;cursor:pointer;position:fixed;bottom:72px;left:12px;right:12px;z-index:90;border-radius:12px}
+</style></head><body>
+<div id="loginKurir" class="login"><div><div style="font-size:50px">🛵</div><h2>APP KURIR</h2><p style="color:#888;font-size:13px">Toko Dik's</p><input id="namaKurirLogin" placeholder="Nama Kurir"><input id="waKurirLogin" placeholder="No WA Kurir"><button class="btn btn-terima" onclick="loginKurir()">MASUK SEBAGAI KURIR</button></div></div>
+
+<div class="top"><h1 id="judulAtas">Ongoing Deliveries</h1><p style="margin:4px 0 0;color:#888;font-size:13px">Halo, <b id="namaKurirTop" style="color:#222">Kurir</b> • <span id="jmlInfo">0 paket</span></p></div>
+<div class="search"><span style="font-size:20px">🔍</span><input id="cariKurir" placeholder="Search" oninput="render()"><span style="font-size:22px;color:#0d5aa7">⌜⌟</span></div>
+<div class="filter"><button class="active" onclick="setFilterType('ALL',this)">All</button><button onclick="setFilterType('COD',this)">COD</button><button onclick="setFilterType('NON COD',this)">Non COD</button><button onclick="setFilterType('RETURN',this)">Return</button></div>
+<div class="list" id="list">Memuat...</div>
+<div id="installBar" class="install-bar" onclick="installApp()">📲 KLIK UNTUK INSTALL APP KURIR</div>
+<div class="bottom"><button id="btnOngoing" class="active" onclick="setTab('ONGOING')"><div>🕐</div>Ongoing</button><button id="btnDone" onclick="setTab('DONE')"><div>✅</div>Done</button><button id="btnPending" onclick="setTab('PENDING')"><div>🔄</div>Pending</button></div>
+
+<div class="detail" id="popDetail">
+<div class="detail-top"><button onclick="tutupDetail()">←</button><b style="font-size:17px">Detail Pengiriman</b></div>
+<div class="detail-body"><div id="isiDetail"></div></div>
+</div>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+let deferredPrompt=null; window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); deferredPrompt=e; document.getElementById("installBar").style.display="block"; });
+function installApp(){ if(deferredPrompt){ deferredPrompt.prompt(); } else { alert("Chrome: titik 3 > Tambahkan ke Layar Utama\n\niPhone: Share > Add to Home Screen"); } }
+const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+let orders=[];let tab="ONGOING";let filterType="ALL";let namaKurir="";
+function cekLogin(){let n=localStorage.getItem("namaKurirDiks");if(n){namaKurir=n;document.getElementById("loginKurir").style.display="none";document.getElementById("namaKurirTop").innerText=n;}} cekLogin();
+function loginKurir(){let n=document.getElementById("namaKurirLogin").value.trim();let w=document.getElementById("waKurirLogin").value.trim();if(!n) return alert("Isi nama!");localStorage.setItem("namaKurirDiks",n);localStorage.setItem("waKurirDiks",w);location.reload();}
+function buatKode(waktu){let d=new Date(waktu);let tgl=("0"+d.getDate()).slice(-2)+("0"+(d.getMonth()+1)).slice(-2)+d.getFullYear().toString().slice(-2);return "CSS"+tgl+String(waktu).slice(-6);}
+db.collection("pengiriman").orderBy("waktu","desc").onSnapshot(snap=>{orders=[];snap.forEach(d=>{let o=d.data();o.id=d.id;if(!o.kode) o.kode=buatKode(o.waktu||Date.now());orders.push(o);});let baru=orders.filter(o=>o.status==="BARU").length;if(baru>0){document.title="("+baru+") Perintah Baru!";if(navigator.vibrate) navigator.vibrate([200,100,200]);}render();});
+function setTab(t){tab=t;document.getElementById("judulAtas").innerText=t==="ONGOING"?"Ongoing Deliveries":t==="DONE"?"Done Deliveries":"Pending Deliveries";document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));document.getElementById(t==="ONGOING"?"btnOngoing":t==="DONE"?"btnDone":"btnPending").classList.add("active");render();}
+function setFilterType(f,el){filterType=f;document.querySelectorAll(".filter button").forEach(b=>b.classList.remove("active"));el.classList.add("active");render();}
+function getTabStatus(o){if(o.status==="SELESAI") return "DONE";if(o.status==="BARU") return "PENDING";return "ONGOING";}
+function getTipe(o){if(o.tipe) return o.tipe.toUpperCase();if(o.pembayaran) return o.pembayaran.toUpperCase();return "NON COD";}
+function getTagihan(o){if(o.totalCOD) return parseInt(o.totalCOD);if(o.total) return parseInt(o.total);if(o.tagihan) return parseInt(o.tagihan);return 0;}
+function render(){
+  let key=(document.getElementById("cariKurir").value||"").toLowerCase();
+  let list=orders.filter(o=>{if(getTabStatus(o)!==tab) return false;if(filterType!=="ALL"&&getTipe(o)!==filterType) return false;if(key&&!(o.nama||"").toLowerCase().includes(key)&&!(o.alamat||"").toLowerCase().includes(key)&&!(o.kode||"").toLowerCase().includes(key)) return false;return true;});
+  document.getElementById("jmlInfo").innerText=list.length+" paket";
+  let html="";list.forEach(o=>{
+    let tipe=getTipe(o);let badgeClass=tipe==="COD"?"badge-cod2":tipe==="RETURN"?"badge-return":"badge-non";
+    let d=new Date(o.waktu||Date.now());let bln=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][d.getMonth()];let tglCantik=d.getDate()+" "+bln+" "+d.getFullYear()+" "+("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);
+    let tagihan=getTagihan(o);
+    html+=`<div class="card" onclick="bukaDetail('${o.id}')"><div class="card-top"><small>${tglCantik}</small><span class="badge-cod ${badgeClass}">${tipe}</span></div><div class="kode">${o.kode}</div><div class="row"><span>👤</span><b>${o.nama}</b></div><div class="row"><span>📍</span><small>${o.alamat}</small></div>
+    ${tipe==="COD"&&tagihan>0 ? `<div style="margin-top:10px;background:#fff3cd;border:1px solid #f59e0b;border-radius:10px;padding:8px 10px;font-weight:900;font-size:14px">💰 TAGIH: Rp ${tagihan.toLocaleString("id-ID")}</div>` : tipe==="NON COD" ? `<div style="margin-top:10px;background:#e6f7e6;border-radius:10px;padding:8px 10px;font-weight:800;font-size:13px;color:#15803d">✅ Sudah Dibayar - Jangan Tagih</div>` : ""}
+    <div style="margin-top:10px;display:flex;gap:8px"><span style="font-size:11px;background:#f1f3f5;padding:4px 8px;border-radius:20px;font-weight:700">${o.status}</span><span style="font-size:11px;background:#f1f3f5;padding:4px 8px;border-radius:20px;font-weight:700">Klik untuk detail ›</span></div></div>`;
+  });
+  document.getElementById("list").innerHTML=html||`<p style="text-align:center;color:#999;padding:20px">Belum ada paket di ${tab}</p>`;
+}
+function bukaDetail(id){
+  let o=orders.find(x=>x.id===id);if(!o) return;
+  let tipe=getTipe(o);let tagihan=getTagihan(o);
+  let d=new Date(o.waktu||Date.now());let bln=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][d.getMonth()];let tglCantik=d.getDate()+" "+bln+" "+d.getFullYear()+" "+("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);
+  let html=`
+    <p style="font-size:13px;color:#999;margin:0">${tglCantik}</p>
+    <h2 style="margin:6px 0;font-size:22px">${o.kode}</h2>
+    <span class="badge-cod ${tipe==="COD"?"badge-cod2":tipe==="RETURN"?"badge-return":"badge-non"}">${tipe}</span>
+    <span style="font-size:12px;background:#f1f3f5;padding:5px 10px;border-radius:20px;font-weight:700;margin-left:6px">${o.status}</span>
+    ${tipe==="COD" ? `
+    <div class="tagih-box">
+      <small>💰 JUMLAH COD YANG HARUS DITAGIH KE PENERIMA</small>
+      <b>Rp ${tagihan>0 ? tagihan.toLocaleString("id-ID") : "0"}</b>
+      <small style="font-weight:400;color:#666">Wajib terima uang segini sebelum barang dikasih!<br>${o.pesanan ? "Pesanan: "+o.pesanan : ""}<br>${o.ongkir ? "Ongkir: Rp "+parseInt(o.ongkir).toLocaleString("id-ID") : ""}</small>
+    </div>` : tipe==="RETURN" ? `
+    <div class="tagih-box" style="background:#ffe8e8;border-color:#d32f2f"><small style="color:#d32f2f">🔄 BARANG RETURN - JANGAN TAGIH</small><b style="font-size:18px;color:#d32f2f">Ambil Barang Dari Penerima</b></div>` : `
+    <div class="lunas-box"><small style="color:#15803d">✅ NON COD - SUDAH DIBAYAR</small><br><b>JANGAN TAGIH UANG!</b><br><small style="color:#666">Penerima sudah bayar via transfer / QRIS. Langsung kasih barangnya aja.</small></div>`}
+    <div class="alamat-box">
+      <b style="font-size:15px">👤 Penerima</b><p style="margin:6px 0 0;font-size:15px">${o.nama}</p>
+      <p style="margin:4px 0;font-size:14px;color:#666">📱 ${o.waAsli||o.wa}</p><hr style="border:0;border-top:1px solid #eee;margin:12px 0">
+      <b style="font-size:15px">📍 Alamat Lengkap</b><p style="font-size:15px;line-height:1.6;margin:6px 0">${o.alamat}</p>
+      <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.alamat)}" target="_blank" style="text-decoration:none"><button class="btn btn-maps">🗺️ Buka Maps - Navigasi ke Alamat Ini</button></a>
+    </div>
+    <div class="alamat-box">
+      <b style="font-size:15px">📦 Detail Pesanan</b>
+      <p style="font-size:14px;line-height:1.6;margin:6px 0;white-space:pre-line">${o.pesanan||"-"}</p>
+      <p style="font-size:13px;color:#666;margin:0">Ongkir: Rp ${(o.ongkir||0).toLocaleString("id-ID")}<br>Kurir: ${o.kurir||"Semua"} ${o.kurirPengantar ? "• Diambil oleh: "+o.kurirPengantar : ""}</p>
+    </div>
+    <a href="https://wa.me/${o.wa}?text=Halo%20${encodeURIComponent(o.nama)}%2C%20saya%20kurir%20Toko%20Dik's%2C%20pesanan%20lagi%20diantar!" target="_blank" style="text-decoration:none"><button class="btn btn-wa">💬 Chat WA Penerima</button></a>
+    ${o.status==="BARU" ? `<button class="btn btn-terima" onclick="ubahStatus('${o.id}','DITERIMA')">✅ TERIMA - PINDAH KE ONGOING</button>` : ""}
+    ${o.status==="DITERIMA" ? `<button class="btn btn-antar" onclick="ubahStatus('${o.id}','DIANTAR')">🛵 MULAI ANTAR SEKARANG</button>` : ""}
+    ${o.status==="DIANTAR" ? `<button class="btn btn-selesai" onclick="ubahStatus('${o.id}','SELESAI')">🎉 SELESAI - UANG SUDAH DITERIMA</button>` : ""}
+    ${o.status==="SELESAI" ? `<p style="text-align:center;color:#16a34a;font-weight:800">✅ Sudah selesai diantar!</p>` : ""}
+  `;
+  document.getElementById("isiDetail").innerHTML=html;
+  document.getElementById("popDetail").style.display="block";
+  window.scrollTo(0,0);
+}
+function tutupDetail(){document.getElementById("popDetail").style.display="none";}
+async function ubahStatus(id,status){
+  if(status==="SELESAI"){let o=orders.find(x=>x.id===id);let tipe=getTipe(o);let tagihan=getTagihan(o);if(tipe==="COD"&&tagihan>0 && !confirm("Uang COD Rp "+tagihan.toLocaleString("id-ID")+" sudah diterima dari "+o.nama+"?")) return;}
+  await db.collection("pengiriman").doc(id).update({status:status,kurirPengantar:namaKurir,updateTerakhir:Date.now()});
+  alert("Status jadi: "+status); tutupDetail();
+}
+</script></body></html>
