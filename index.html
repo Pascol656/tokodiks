@@ -2,16 +2,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#fff;padding-bottom:90px;color:#111}
-.top{background:#fff;border-bottom:1px solid #e5e5e5;padding:12px;position:sticky;top:0;z-index:20}
-.top2{display:flex;gap:10px;align-items:center}
+.top{background:#fff;border-bottom:1px solid #e5e5e5;padding:12px;position:sticky;top:0;z-index:20}.top2{display:flex;gap:10px;align-items:center}
 .search{flex:1;background:#f5f5f5;border:1px solid #e5e5e5;border-radius:10px;display:flex;align-items:center;padding:10px;gap:8px}.search input{border:0;outline:none;width:100%;font-size:14px;background:transparent}
 .icon-btn{position:relative;font-size:24px;cursor:pointer;background:#f5f5f5;border:1px solid #e5e5e5;border-radius:10px;width:44px;height:44px}.badge{position:absolute;top:-6px;right:-6px;background:#111;color:#fff;font-size:11px;font-weight:900;min-width:20px;height:20px;border-radius:20px;display:flex;align-items:center;justify-content:center}
-.promo{background:#fff;margin:10px;border:1px solid #e5e5e5;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.promo b{font-size:14px}.promo small{color:#777;font-size:12px}
+.promo{background:#fff;margin:10px;border:1px solid #e5e5e5;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}.promo b{font-size:14px}.promo small{color:#777;font-size:12px}
 .menu{background:#fff;margin:0 10px;border:1px solid #e5e5e5;border-radius:12px;padding:14px 8px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.menu::-webkit-scrollbar{display:none}
 .menu-item{min-width:68px;text-align:center;cursor:pointer;flex-shrink:0}.menu-item .ic{width:52px;height:52px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 6px;border:1px solid #e5e5e5}.menu-item.active .ic{background:#111;color:#fff;border-color:#111}.menu-item span{font-size:11px;line-height:1.2;display:block}
-.wrap{max-width:800px;margin:0 auto}
-h3{padding:0 12px;font-size:16px;margin:14px 0 8px}
+.wrap{max-width:800px;margin:0 auto}h3{padding:0 12px;font-size:16px;margin:14px 0 8px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 10px}
 .card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}.card img{width:100%;aspect-ratio:1;object-fit:cover;background:#f5f5f5}.card .isi{padding:10px}.card .nama{font-size:13px;line-height:1.3;height:34px;overflow:hidden}.card .harga{color:#111;font-weight:900;font-size:15px;margin-top:4px}.card .stok{font-size:11px;color:#888}
 .btn-add{margin:8px;background:#111;color:#fff;border:0;padding:10px;border-radius:10px;font-weight:800;cursor:pointer;width:calc(100% - 16px)}
@@ -19,58 +16,36 @@ h3{padding:0 12px;font-size:16px;margin:14px 0 8px}
 .popup{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:50;display:none;padding:16px}.popup>div{background:#fff;border-radius:14px;padding:16px;max-width:420px;margin:40px auto;max-height:80vh;overflow:auto}
 @media(min-width:800px){.top2,.promo,.menu,.grid,.cart-bar{max-width:800px;margin-left:auto;margin-right:auto}.promo,.menu{margin-top:10px}}
 </style></head><body>
-
-<div class="top"><div class="top2">
-<div class="search"><span>🔍</span><input id="cari" placeholder="Cari di Toko Dik's..." oninput="render()"></div>
-<button class="icon-btn" onclick="bukaCart()">🛒<span class="badge" id="jmlCart">0</span></button>
-<button class="icon-btn" onclick="chatWA()">💬<span class="badge">1</span></button>
-</div><p style="margin:8px 0 0;font-size:14px;font-weight:900">TOKO DIK'S <span style="font-weight:400;color:#777;font-size:12px">| Warung Online</span></p></div>
-
-<div class="wrap">
-
-<!-- PROMO HARI INI - INI YANG JANGAN DIHAPUS -->
-<div class="promo" onclick="klikPromo()"><div><b>🎁 Promo Hari Ini</b><br><small>Klik untuk lihat promo spesial hari ini!</small></div><b>›</b></div>
-
-<div class="menu" id="menuKat"></div>
-
-<h3>Rekomendasi Buat Kamu</h3>
-<div class="grid" id="list">Memuat produk...</div>
-<p style="text-align:center;color:#999;font-size:12px;padding:10px">Toko Dik's • Buka Setiap Hari</p>
-</div>
-
+<div class="top"><div class="top2"><div class="search"><span>🔍</span><input id="cari" placeholder="Cari di Toko Dik's..." oninput="render()"></div><button class="icon-btn" onclick="bukaCart()">🛒<span class="badge" id="jmlCart">0</span></button><button class="icon-btn" onclick="chatWA()">💬<span class="badge">1</span></button></div><p style="margin:8px 0 0;font-size:14px;font-weight:900">TOKO DIK'S <span style="font-weight:400;color:#777;font-size:12px">| Warung Online</span></p></div>
+<div class="wrap"><div class="promo" id="boxPromo" onclick="klikPromo()"><div><b>🎁 Promo Hari Ini</b><br><small id="promoPreview">Memuat promo...</small></div><b>›</b></div>
+<div class="menu" id="menuKat"></div><h3>Rekomendasi Buat Kamu</h3><div class="grid" id="list">Memuat produk...</div><p style="text-align:center;color:#999;font-size:12px;padding:10px">Toko Dik's • Buka Setiap Hari</p></div>
 <div class="cart-bar"><div><small style="color:#888">Total Belanja</small><br><b id="totalTxt">Rp 0</b> • <span id="isiTxt">0 barang</span></div><button class="btn-wa" onclick="bukaCart()">LIHAT KERANJANG</button></div>
-
 <div class="popup" id="popCart"><div><h3 style="padding:0;margin:0">Keranjang Kamu</h3><div id="isiCart" style="margin:12px 0"></div><div style="display:flex;gap:8px"><button onclick="tutupCart()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:800">Tutup</button><button onclick="checkoutWA()" style="flex:2;padding:12px;border-radius:10px;background:#111;color:#fff;font-weight:900;border:0">CHECKOUT VIA WA</button></div></div></div>
-
-<!-- POPUP PROMO -->
-<div class="popup" id="popPromo"><div><h3 style="padding:0;margin:0">🎁 Promo Hari Ini</h3><p style="font-size:14px;line-height:1.6">🔥 Beli 2 Mie Instan, Gratis 1 Kopi Sachet!<br>🔥 Gratis Ongkir area dekat!<br>🔥 Belanja Rp 50.000, dapat bonus snack!<br><br><small style="color:#888">Promo berlaku hari ini aja, buruan order!</small></p><button onclick="tutupPromo()" style="width:100%;padding:12px;border-radius:10px;background:#111;color:#fff;font-weight:900;border:0">TUTUP</button></div></div>
-
+<div class="popup" id="popPromo"><div><h3 style="padding:0;margin:0">🎁 Promo Hari Ini</h3><p id="promoFull" style="font-size:14px;line-height:1.6;white-space:pre-line">Memuat...</p><button onclick="tutupPromo()" style="width:100%;padding:12px;border-radius:10px;background:#111;color:#fff;font-weight:900;border:0">TUTUP</button></div></div>
 <script>
 const WA="6281234567890";
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
-firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let produk=[]; let cart={}; let katAktif="Semua";
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+let produk=[];let cart={};let katAktif="Semua";let promoText="Beli 2 Mie Instan, Gratis 1 Kopi Sachet!";
 let icons={Semua:"🏠",Makanan:"🍜",Minuman:"🥤",Rokok:"🚬",Sembako:"🛒",Jajanan:"🍿"};
 function getIcon(k){return icons[k]||"📦";}
+// PROMO FIX - LANGSUNG UPDATE SETIAP ADA PERUBAHAN
+db.collection("toko").doc("promo").onSnapshot(doc=>{
+  console.log("PROMO DARI FIREBASE:", doc.exists ? doc.data() : "BELUM ADA");
+  if(doc.exists){
+    let d=doc.data();
+    if(d.text && d.text.trim()!==""){ promoText=d.text; }
+    document.getElementById("boxPromo").style.display = d.aktif===false ? "none" : "flex";
+  }
+  document.getElementById("promoPreview").innerText = promoText.split("\n")[0];
+  document.getElementById("promoFull").innerText = promoText;
+}, err=>{ console.log("GAGAL AMBIL PROMO:", err); });
 db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists)produk=doc.data().list||[];render();});
 function getKategori(){let s=["Semua"];produk.forEach(p=>{if(p.kat&&!s.includes(p.kat))s.push(p.kat)});return s;}
 function pilihKat(k){katAktif=k;render();}
-function klikPromo(){document.getElementById("popPromo").style.display="block";}
+function klikPromo(){document.getElementById("promoFull").innerText=promoText;document.getElementById("popPromo").style.display="block";}
 function tutupPromo(){document.getElementById("popPromo").style.display="none";}
-function render(){
-  let kats=getKategori();
-  document.getElementById("menuKat").innerHTML=kats.map(k=>`<div class="menu-item ${katAktif===k?"active":""}" onclick="pilihKat('${k}')"><div class="ic">${getIcon(k)}</div><span>${k}</span></div>`).join("")+`<div class="menu-item" onclick="chatWA()"><div class="ic">💬</div><span>Chat Toko</span></div>`;
-  let key=(document.getElementById("cari").value||"").toLowerCase();
-  let html="";
-  produk.forEach((p,i)=>{
-    if(katAktif!=="Semua" && p.kat!==katAktif) return;
-    if(key && !p.nama.toLowerCase().includes(key)) return;
-    let stok=p.stok ?? 20;
-    html+=`<div class="card"><img src="${p.img}"><div class="isi"><div class="nama">${p.nama} ${p.varian?"- "+p.varian:""}</div><div class="harga">Rp ${p.harga.toLocaleString("id-ID")}</div><div class="stok">Stok: ${stok} • ${p.kat||""}</div></div><button class="btn-add" onclick="tambah(${i})">${stok<=0?"HABIS":"+ KERANJANG"}</button></div>`;
-  });
-  document.getElementById("list").innerHTML=html||"<p style='grid-column:1/-1;text-align:center;color:#999'>Belum ada barang di kategori ini</p>";
-  updateCart();
-}
+function render(){let kats=getKategori();document.getElementById("menuKat").innerHTML=kats.map(k=>`<div class="menu-item ${katAktif===k?"active":""}" onclick="pilihKat('${k}')"><div class="ic">${getIcon(k)}</div><span>${k}</span></div>`).join("")+`<div class="menu-item" onclick="chatWA()"><div class="ic">💬</div><span>Chat Toko</span></div>`;let key=(document.getElementById("cari").value||"").toLowerCase();let html="";produk.forEach((p,i)=>{if(katAktif!=="Semua"&&p.kat!==katAktif)return;if(key&&!p.nama.toLowerCase().includes(key))return;let stok=p.stok??20;html+=`<div class="card"><img src="${p.img}"><div class="isi"><div class="nama">${p.nama} ${p.varian?"- "+p.varian:""}</div><div class="harga">Rp ${p.harga.toLocaleString("id-ID")}</div><div class="stok">Stok: ${stok} • ${p.kat||""}</div></div><button class="btn-add" onclick="tambah(${i})">${stok<=0?"HABIS":"+ KERANJANG"}</button></div>`;});document.getElementById("list").innerHTML=html||"<p style='grid-column:1/-1;text-align:center;color:#999'>Belum ada barang</p>";updateCart();}
 function tambah(i){cart[i]=(cart[i]||0)+1;updateCart();alert(produk[i].nama+" masuk keranjang!");}
 function updateCart(){let j=0,t=0;for(let k in cart){j+=cart[k];t+=cart[k]*produk[k].harga;}document.getElementById("jmlCart").innerText=j;document.getElementById("totalTxt").innerText="Rp "+t.toLocaleString("id-ID");document.getElementById("isiTxt").innerText=j+" barang";}
 function bukaCart(){let html="";for(let k in cart){let p=produk[k];html+=`<div style="display:flex;gap:10px;align-items:center;border-bottom:1px solid #eee;padding:8px 0"><img src="${p.img}" style="width:50px;height:50px;object-fit:cover;border-radius:8px"><div style="flex:1"><b style="font-size:13px">${p.nama}</b><br><small>Rp ${p.harga.toLocaleString("id-ID")} x ${cart[k]}</small></div><button onclick="ubah(${k},1)" style="padding:6px 10px;border-radius:8px;border:1px solid #ddd">+</button><button onclick="ubah(${k},-1)" style="padding:6px 10px;border-radius:8px;border:1px solid #ddd">-</button></div>`;}document.getElementById("isiCart").innerHTML=html||"Keranjang masih kosong";document.getElementById("popCart").style.display="block";}
