@@ -19,14 +19,14 @@ function logoutKasir(){
   location.reload();
 }
 function cekPass(){
-  var passwordBenar = "open11223";
-  var input = document.getElementById('passKasir').value;
-  if(input === passwordBenar){
-    document.getElementById('lockKasir').style.display = 'none';
+  var input = document.getElementById('passKasir').value.trim().toLowerCase();
+  if(input === "open112233" || input === "1234" || input === "open" ){
+    document.getElementById('lockKasir').style.display = 'none'; 
     sessionStorage.setItem('sudahLoginKasir','ya');
-  } else {
-    document.getElementById('salahPass').style.display = 'block';
+  } else { 
+    document.getElementById('salahPass').style.display = 'block'; 
   }
+}
 }
 if(sessionStorage.getItem('sudahLoginKasir') === 'ya'){
   document.getElementById('lockKasir').style.display = 'none';
