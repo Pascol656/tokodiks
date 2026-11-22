@@ -14,8 +14,11 @@
 </div>
 
 <script>
+function logoutKasir(){
+  sessionStorage.removeItem('sudahLoginKasir');
+  location.reload();
+}
 function cekPass(){
-  // GANTI PASSWORD DI SINI BRO
   var passwordBenar = "open112233";
   var input = document.getElementById('passKasir').value;
   if(input === passwordBenar){
@@ -25,13 +28,12 @@ function cekPass(){
     document.getElementById('salahPass').style.display = 'block';
   }
 }
-// Biar kalo refresh gak disuruh login lagi selama browser belum ditutup
 if(sessionStorage.getItem('sudahLoginKasir') === 'ya'){
   document.getElementById('lockKasir').style.display = 'none';
 }
 document.getElementById('passKasir').addEventListener('keyup', function(e){ if(e.key === 'Enter'){ cekPass(); } });
 </script>
-<div class="header"><b>🧾 TOKO <span>DIK'S</span> | KASIR</b><div><span id="jam" style="font-size:12px"></span> <button type="button" onclick="location.reload()" style="background:#333;color:#fff;padding:8px 14px">🔄 Refresh</button></div></div>
+<div class="header"><b>🧾 TOKO <span>DIK'S</span> | KASIR</b><div><span id="jam" style="font-size:12px"></span> <button type="button" onclick="logoutKasir()" style="background:#ef4444;color:#fff;padding:8px 14px">🚪 LOGOUT</button> <button type="button" onclick="location.reload()" style="background:#333;color:#fff;padding:8px 14px">🔄 Refresh</button></div></div>
 <div class="wrap">
 <button type="button" id="btnInstall" onclick="installApp()">📲 INSTALL APLIKASI KASIR</button>
 <div class="rekap card"><div><small>💰 MASUK HARI INI</small><b id="rekMasuk" style="color:#16a34a">Rp 0</b></div><div><small>💸 KELUAR HARI INI</small><b id="rekKeluar" style="color:#dc2626">Rp 0</b></div><div><small>📦 TOTAL STOK</small><b id="rekStok">0 pcs</b></div></div>
