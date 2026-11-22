@@ -18,43 +18,53 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 .login-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.login-box{background:#fff;padding:28px;border-radius:20px;width:100%;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
 .popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99;padding:16px;align-items:center;justify-content:center}.popup>div{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px}
 .order-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:16px}.modal>div{background:#fff;border-radius:20px;padding:22px;width:100%;max-width:540px;max-height:92vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}.form2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.form2 .full{grid-column:1/-1}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}.modal>div{background:#fff;border-radius:20px;padding:22px;width:100%;max-width:600px;margin:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}.form2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.form2 .full{grid-column:1/-1}
 .kurir-item{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:13px}
+.tab-kurir{display:flex;gap:8px;margin:12px 0}.tab-kurir button{flex:1;padding:10px;border-radius:10px;background:#f1f5f9;font-size:13px}.tab-kurir button.active{background:#16a34a;color:#fff}
 @media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}.form2{grid-template-columns:1fr}}
 </style></head><body>
 <div id="loginBox" class="login-bg"><div class="login-box"><div style="font-size:40px">🔒</div><h2>LOGIN ADMIN</h2><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn-merah" onclick="loginAdmin()">MASUK</button><p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
 <div id="isiAdmin" style="display:none">
-<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge" id="status">Menghubungkan...</span><button class="btn-kurir" onclick="bukaPerintah()">🛵 + Perintah Kurir</button><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
+<div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge" id="status">Menghubungkan...</span><button class="btn-kurir" onclick="bukaPerintah()">🛵 Perintah Kurir</button><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
 <div class="wrap"><div class="grid2">
 <div>
 <div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><textarea id="promoInput" rows="3"></textarea><label style="font-size:12px"><input type="checkbox" id="promoAktif" checked style="width:auto"> Tampilkan Promo</label><button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button><p id="promoStatus" style="font-size:12px;color:#16a34a;text-align:center"></p></div>
-<div class="card" style="border:2px solid #16a34a"><h3>🛵 Daftar Kurir (WA)</h3><p style="font-size:12px;color:#64748b;margin:0 0 8px">Kurir tidak perlu aplikasi, cukup WA saja. Daftarkan disini.</p><div id="listKurirAdmin">Memuat...</div><input id="namaKurirBaru" placeholder="Nama Kurir contoh: Budi"><input id="waKurirBaru" placeholder="No WA Kurir contoh: 08123456789"><button class="btn-hitam" onclick="tambahKurir()">+ Tambah Kurir</button></div>
 <div class="card"><h3>➕ Tambah Barang</h3><input id="namaBaru" placeholder="Nama barang"><div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div><input id="varianBaru" placeholder="Varian"><select id="katPilih"></select><input id="fotoBaru" placeholder="Link foto"><button class="btn-merah" onclick="tambahBarang()">+ Simpan Barang Baru</button></div>
 <div class="card"><h3>🏷️ Kategori</h3><div id="listKat"></div><input id="katBaru" placeholder="Kategori baru..."><button class="btn-hitam" onclick="tambahKat()">+ Tambah Kategori</button></div>
 </div>
 <div>
-<div class="card"><h3>📦 Daftar Pengantaran <span id="jmlOrder" style="background:#111;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px">0</span></h3><p style="font-size:13px;color:#64748b;margin:0 0 12px">Klik tombol hijau <b>+ Perintah Kurir</b> di atas, isi, pilih kurir, otomatis terkirim ke WA kurir!</p><div id="listOrder">Memuat...</div></div>
 <div class="card" style="padding:0;overflow:hidden"><div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div><table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table></div>
 </div>
 </div></div></div>
 <div class="modal" id="modalPerintah"><div>
-<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛵 Perintah Pengantaran</h3><button onclick="tutupPerintah()" style="background:#f1f5f9;width:36px;height:36px;border-radius:50%;font-size:16px">✕</button></div>
-<p style="font-size:12px;color:#64748b;margin:8px 0 12px">Isi disini, langsung terkirim ke WA kurir yang dipilih!</p>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛵 Perintah Kurir</h3><button onclick="tutupPerintah()" style="background:#f1f5f9;width:36px;height:36px;border-radius:50%;font-size:16px">✕</button></div>
+<div class="tab-kurir"><button id="tabBtn1" class="active" onclick="pindahTabKurir(1)">📝 Perintah Baru</button><button id="tabBtn2" onclick="pindahTabKurir(2)">👥 Daftar Kurir</button><button id="tabBtn3" onclick="pindahTabKurir(3)">📦 Pengantaran <span id="jmlOrder">0</span></button></div>
+<div id="tabKurir1">
 <label style="font-size:12px;font-weight:800">PILIH KURIR *</label><select id="pilihKurir"></select>
 <div class="form2">
 <input id="namaPenerima" placeholder="Nama Penerima *">
 <input id="waPenerima" placeholder="No WA Penerima *">
 <textarea id="alamatPenerima" rows="3" class="full" placeholder="Alamat Lengkap *"></textarea>
 <textarea id="pesananKurir" rows="3" class="full" placeholder="Pesanan * contoh: 2 Mie + 1 Kopi"></textarea>
-<select id="tipeBayar"><option value="NON COD">NON COD - Sudah Dibayar</option><option value="COD">COD - Bayar di Tempat</option><option value="RETURN">RETURN - Barang Balik</option></select>
-<input id="totalCOD" type="number" placeholder="💰 Jumlah COD - contoh: 50000">
+<select id="tipeBayar"><option value="LUNAS">LUNAS - Sudah Dibayar</option><option value="TAGIHAN">TAGIHAN - Bayar di Tempat</option><option value="RETURN">RETURN - Barang Balik</option></select>
+<input id="totalCOD" type="number" placeholder="Jumlah Tagihan - contoh: 50000">
 <input id="ongkirKurir" type="number" placeholder="Ongkir - contoh: 5000">
 </div>
 <button style="background:#25D366;color:#fff;width:100%;padding:13px;font-size:15px;margin-top:10px" onclick="kirimKeKurir()">💬 KIRIM KE WA KURIR</button>
+</div>
+<div id="tabKurir2" style="display:none">
+<p style="font-size:12px;color:#64748b;margin:0 0 8px">Kurir cukup pakai WA saja. Daftarkan disini.</p>
+<div id="listKurirAdmin">Memuat...</div>
+<input id="namaKurirBaru" placeholder="Nama Kurir contoh: Budi">
+<input id="waKurirBaru" placeholder="No WA Kurir contoh: 08123456789">
+<button class="btn-hitam" onclick="tambahKurir()">+ Tambah Kurir</button>
+</div>
+<div id="tabKurir3" style="display:none"><div id="listOrder">Memuat...</div></div>
 </div></div>
 <div class="popup" id="popPass"><div><h3>🔑 Ganti Password</h3><input id="passLama" type="password" placeholder="Password lama"><input id="passBaru" type="password" placeholder="Password baru"><input id="passBaru2" type="password" placeholder="Ulangi"><div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div><p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
 <script>
-function bukaPerintah(){refreshPilihKurir();document.getElementById("modalPerintah").style.display="flex";}
+function pindahTabKurir(n){[1,2,3].forEach(i=>{document.getElementById("tabKurir"+i).style.display=i===n?"block":"none";document.getElementById("tabBtn"+i).classList.toggle("active",i===n);});}
+function bukaPerintah(){refreshPilihKurir();pindahTabKurir(1);document.getElementById("modalPerintah").style.display="flex";}
 function tutupPerintah(){document.getElementById("modalPerintah").style.display="none";}
 const USER_BENAR="diks";function getPass(){return localStorage.getItem("passAdminDiks")||"diks12345";}
 function cekLogin(){if(localStorage.getItem("loginAdminDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";}}cekLogin();
@@ -73,13 +83,15 @@ function formatWA(wa){wa=(wa||"").replace(/\D/g,"");if(wa.startsWith("0"))wa="62
 async function tambahKurir(){let n=document.getElementById("namaKurirBaru").value.trim();let w=document.getElementById("waKurirBaru").value.trim();if(!n||!w) return alert("Isi Nama + No WA Kurir!");await db.collection("kurir").add({nama:n,wa:formatWA(w),waAsli:w,waktu:Date.now()});document.getElementById("namaKurirBaru").value="";document.getElementById("waKurirBaru").value="";alert("Kurir "+n+" ditambahkan!");}
 async function hapusKurir(id,nama){if(confirm("Hapus kurir "+nama+"?")) await db.collection("kurir").doc(id).delete();}
 db.collection("kurir").orderBy("waktu","asc").onSnapshot(snap=>{daftarKurir=[];snap.forEach(d=>{let k=d.data();k.id=d.id;daftarKurir.push(k);});if(daftarKurir.length===0){document.getElementById("listKurirAdmin").innerHTML="<p style='font-size:12px;color:#999'>Belum ada kurir. Tambahkan dulu!</p>";}else{document.getElementById("listKurirAdmin").innerHTML=daftarKurir.map(k=>`<div class="kurir-item"><span><b>${k.nama}</b><br><small>${k.waAsli||k.wa}</small></span><button class="btn-hapus" onclick="hapusKurir('${k.id}','${k.nama}')">🗑️</button></div>`).join("");}refreshPilihKurir();});
-function refreshPilihKurir(){let s=document.getElementById("pilihKurir");if(!s) return;if(daftarKurir.length===0){s.innerHTML="<option value=''>Belum ada kurir - Daftarkan dulu di kiri!</option>";}else{s.innerHTML=daftarKurir.map(k=>`<option value="${k.wa}">${k.nama} - ${k.waAsli||k.wa}</option>`).join("");}}
-function buatPesanWA(o){let tgl=new Date().toLocaleString("id-ID");let tagih=o.tipe==="COD" ? `💰 *TAGIH COD: Rp ${(o.totalCOD||0).toLocaleString("id-ID")}*\nWajib terima uang segini sebelum barang dikasih!` : o.tipe==="RETURN" ? `🔄 *BARANG RETURN - JANGAN TAGIH*\nAmbil barang dari penerima!` : `✅ *NON COD - SUDAH DIBAYAR*\nJANGAN TAGIH UANG! Langsung kasih barangnya.`;
-return `*🛵 PERINTAH PENGANTARAN BARU - TOKO DIK'S*\n${tgl}\n--------------------------\n👤 *Penerima:* ${o.nama}\n📱 *WA Penerima:* ${o.waAsli||o.wa}\n📍 *Alamat:*\n${o.alamat}\n\n📦 *Pesanan:*\n${o.pesanan}\n\n💲 *Tipe:* ${o.tipe}\n${tagih}\n🏍️ *Ongkir:* Rp ${(o.ongkir||0).toLocaleString("id-ID")}\n\n📍 *Maps:* https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.alamat)}\n\nMohon segera diantar ya! Terima kasih 🙏`;}
+function refreshPilihKurir(){let s=document.getElementById("pilihKurir");if(!s) return;if(daftarKurir.length===0){s.innerHTML="<option value=''>Belum ada kurir - Daftarkan dulu di Daftar Kurir!</option>";}else{s.innerHTML=daftarKurir.map(k=>`<option value="${k.wa}">${k.nama} - ${k.waAsli||k.wa}</option>`).join("");}}
+function buatPesanWA(o){
+let bayar=o.tipe==="TAGIHAN" ? `Tagihan: Rp ${(o.totalCOD||0).toLocaleString("id-ID")}\nTolong tagih ke penerima ya.` : o.tipe==="RETURN" ? `Barang Return - Ambil barang dari penerima.` : `LUNAS - Sudah dibayar, jangan tagih.`;
+return `Antar Pesanan - Toko Dik's\n\nPenerima: ${o.nama}\nAlamat: ${o.alamat}\nPesanan: ${o.pesanan}\n\n${bayar}\nOngkir: Rp ${(o.ongkir||0).toLocaleString("id-ID")}\n\nTolong segera diantar ya, makasih.`;
+}
 async function kirimKeKurir(){
   let waKurir=document.getElementById("pilihKurir").value;
   let namaKurirPilih=document.getElementById("pilihKurir").selectedOptions[0]?.text||"Kurir";
-  if(!waKurir) return alert("Belum ada kurir! Daftarkan dulu kurir di kiri!");
+  if(!waKurir) return alert("Belum ada kurir! Daftarkan dulu di tab Daftar Kurir!");
   let nama=document.getElementById("namaPenerima").value.trim();
   let wa=document.getElementById("waPenerima").value.trim();
   let alamat=document.getElementById("alamatPenerima").value.trim();
@@ -88,12 +100,12 @@ async function kirimKeKurir(){
   let tipe=document.getElementById("tipeBayar").value;
   let totalCOD=parseInt(document.getElementById("totalCOD").value)||0;
   if(!nama||!wa||!alamat||!pesanan) return alert("ISI SEMUA YANG ADA * DULU BRO!");
-  if(tipe==="COD" && totalCOD<=0) return alert("Kalo COD, isi Jumlah COD yang harus ditagih!");
+  if(tipe==="TAGIHAN" && totalCOD<=0) return alert("Kalo TAGIHAN, isi Jumlah Tagihan!");
   let data={nama:nama,wa:formatWA(wa),waAsli:wa,alamat:alamat,pesanan:pesanan,ongkir:ongkir,tipe:tipe,totalCOD:totalCOD,kurir:namaKurirPilih,waKurir:waKurir,status:"BARU",waktu:Date.now(),tanggal:new Date().toLocaleString("id-ID")};
   await db.collection("pengiriman").add(data);
   window.open("https://wa.me/"+waKurir+"?text="+encodeURIComponent(buatPesanWA(data)),"_blank");
   document.getElementById("namaPenerima").value="";document.getElementById("waPenerima").value="";document.getElementById("alamatPenerima").value="";document.getElementById("pesananKurir").value="";document.getElementById("ongkirKurir").value="";document.getElementById("totalCOD").value="";
-  tutupPerintah();
+  pindahTabKurir(3);
 }
 function kirimUlangWA(id){let o=daftarOrder.find(x=>x.id===id);if(!o) return;let waKurir=o.waKurir|| (daftarKurir[0]?.wa||"");if(!waKurir) return alert("No WA kurir tidak ditemukan!");window.open("https://wa.me/"+waKurir+"?text="+encodeURIComponent(buatPesanWA(o)),"_blank");}
 async function ubahStatusOrder(id,status){await db.collection("pengiriman").doc(id).update({status:status});}
@@ -101,7 +113,8 @@ db.collection("pengiriman").orderBy("waktu","desc").onSnapshot(snap=>{
   daftarOrder=[];let html="";let j=0;
   snap.forEach(doc=>{let o=doc.data();o.id=doc.id;daftarOrder.push(o);j++;
     let warna = o.status==="BARU" ? "#fef3c7;color:#92400e" : o.status==="DITERIMA" ? "#dbeafe;color:#1e40af" : o.status==="DIANTAR" ? "#fef9c3;color:#854d0e" : "#dcfce7;color:#15803d";
-    html+=`<div class="order-card"><div style="display:flex;justify-content:space-between;align-items:start"><div><b>👤 ${o.nama}</b> <span style="background:${warna};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${o.status}</span> <span style="background:#f1f5f9;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${o.tipe||"NON COD"}</span><br><small style="color:#64748b">${o.tanggal} • Kurir: ${o.kurir||"-"}</small></div><button class="btn-hapus" onclick="hapusOrder('${o.id}')">🗑️</button></div><p style="font-size:13px;margin:8px 0;line-height:1.5">📍 <b>Alamat:</b> ${o.alamat}<br>📦 <b>Pesanan:</b> ${o.pesanan}<br>💰 <b>TAGIH COD:</b> Rp ${(o.totalCOD||0).toLocaleString("id-ID")} • Ongkir: Rp ${o.ongkir||0}<br>📱 WA Penerima: ${o.waAsli||o.wa}</p><div style="display:flex;gap:6px;flex-wrap:wrap"><button style="background:#25D366;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px" onclick="kirimUlangWA('${o.id}')">💬 Kirim Ulang ke WA Kurir</button><a href="https://wa.me/${o.wa}?text=Halo%20${encodeURIComponent(o.nama)}%2C%20pesanan%20dari%20Toko%20Dik's%20sedang%20diantar!" target="_blank" style="background:#16a34a;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:800">💬 WA Penerima</a><select onchange="ubahStatusOrder('${o.id}',this.value)" style="width:auto;margin:0;padding:8px;font-size:12px"><option value="BARU" ${o.status==="BARU"?"selected":""}>BARU</option><option value="DITERIMA" ${o.status==="DITERIMA"?"selected":""}>DITERIMA</option><option value="DIANTAR" ${o.status==="DIANTAR"?"selected":""}>DIANTAR</option><option value="SELESAI" ${o.status==="SELESAI"?"selected":""}>SELESAI</option></select></div></div>`;
+    let labelTipe=o.tipe==="TAGIHAN"?"TAGIHAN":o.tipe==="RETURN"?"RETURN":"LUNAS";
+    html+=`<div class="order-card"><div style="display:flex;justify-content:space-between;align-items:start"><div><b>👤 ${o.nama}</b> <span style="background:${warna};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${o.status}</span> <span style="background:#f1f5f9;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">${labelTipe}</span><br><small style="color:#64748b">${o.tanggal} • Kurir: ${o.kurir||"-"}</small></div><button class="btn-hapus" onclick="hapusOrder('${o.id}')">🗑️</button></div><p style="font-size:13px;margin:8px 0;line-height:1.5">📍 <b>Alamat:</b> ${o.alamat}<br>📦 <b>Pesanan:</b> ${o.pesanan}<br>💰 <b>${labelTipe==="TAGIHAN"?"Tagihan":""}:</b> Rp ${(o.totalCOD||0).toLocaleString("id-ID")} • Ongkir: Rp ${o.ongkir||0}<br>📱 WA Penerima: ${o.waAsli||o.wa}</p><div style="display:flex;gap:6px;flex-wrap:wrap"><button style="background:#25D366;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px" onclick="kirimUlangWA('${o.id}')">💬 Kirim Ulang ke WA Kurir</button><a href="https://wa.me/${o.wa}?text=Halo%20${encodeURIComponent(o.nama)}%2C%20pesanan%20dari%20Toko%20Dik's%20sedang%20diantar!" target="_blank" style="background:#16a34a;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:800">💬 WA Penerima</a><select onchange="ubahStatusOrder('${o.id}',this.value)" style="width:auto;margin:0;padding:8px;font-size:12px"><option value="BARU" ${o.status==="BARU"?"selected":""}>BARU</option><option value="DITERIMA" ${o.status==="DITERIMA"?"selected":""}>DITERIMA</option><option value="DIANTAR" ${o.status==="DIANTAR"?"selected":""}>DIANTAR</option><option value="SELESAI" ${o.status==="SELESAI"?"selected":""}>SELESAI</option></select></div></div>`;
   });
   document.getElementById("listOrder").innerHTML=html||"Belum ada pengantaran";
   document.getElementById("jmlOrder").innerText=j;
