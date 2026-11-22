@@ -8,7 +8,7 @@
 .grid2{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
 .card{background:#fff;border-radius:16px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .card h3{margin:0 0 12px;font-size:16px}
-input,select{width:100%;padding:11px 12px;margin:5px 0;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc;outline:none}input:focus{border-color:#dc2626;background:#fff}
+input,select,textarea{width:100%;padding:11px 12px;margin:5px 0;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc;outline:none}input:focus,textarea:focus{border-color:#dc2626;background:#fff}
 button{border:0;padding:11px;border-radius:10px;font-weight:800;cursor:pointer}
 .btn-merah{background:#dc2626;color:#fff;width:100%}.btn-hitam{background:#0f172a;color:#fff;width:100%}.btn-hijau{background:#16a34a;color:#fff;padding:8px 14px;font-size:13px}.btn-hapus{background:#fef2f2;color:#dc2626;padding:8px 12px;font-size:13px}
 .chip{display:inline-block;background:#f1f5f9;padding:5px 10px;border-radius:20px;margin:2px;font-size:12px;border:1px solid #e2e8f0}
@@ -21,20 +21,23 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 @media(max-width:850px){.grid2{grid-template-columns:1fr}.header{padding:12px}.wrap{padding:12px}table{display:block;overflow-x:auto}}
 </style></head><body>
 
-<!-- LOGIN -->
 <div id="loginBox" class="login-bg"><div class="login-box">
 <div style="font-size:40px">🔒</div><h2 style="margin:8px 0 4px">LOGIN ADMIN</h2><p style="color:#64748b;font-size:13px;margin:0 0 14px">Hanya Pemilik Toko Dik's</p>
 <input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password">
 <button class="btn-merah" onclick="loginAdmin()">MASUK</button>
-<p id="pesanLogin" style="color:#dc2626;font-size:13px"></p>
-<p style="font-size:11px;color:#94a3b8"></p></div></div>
+<p id="pesanLogin" style="color:#dc2626;font-size:13px"></p></div></div>
 
-<!-- ISI ADMIN -->
 <div id="isiAdmin" style="display:none">
 <div class="header"><b>🛒 TOKO <span>DIK'S</span> <small style="color:#64748b;font-weight:400">| Admin Panel</small></b><div style="display:flex;gap:8px;align-items:center"><span class="badge" id="status">Menghubungkan...</span><button class="btn-pass" onclick="bukaGantiPass()">🔑 Ganti Password</button><button class="btn-logout" onclick="logoutAdmin()">🚪 Logout</button></div></div>
 
 <div class="wrap"><div class="grid2">
 <div>
+<!-- INI BARU - EDIT PROMO -->
+<div class="card" style="border:2px solid #111"><h3>🎁 Promo Hari Ini</h3><p style="font-size:12px;color:#64748b;margin:0 0 6px">Ketik promo lu disini, langsung muncul di toko pembeli!</p>
+<textarea id="promoInput" rows="4" placeholder="Contoh: Beli 2 Mie Gratis 1 Kopi!&#10;Gratis Ongkir area dekat!"></textarea>
+<label style="font-size:12px"><input type="checkbox" id="promoAktif" style="width:auto"> Tampilkan Promo di Toko</label>
+<button class="btn-merah" onclick="simpanPromo()">💾 SIMPAN PROMO</button></div>
+
 <div class="card"><h3>➕ Tambah Barang</h3>
 <input id="namaBaru" placeholder="Nama barang">
 <div style="display:flex;gap:8px"><input id="hargaBaru" type="number" placeholder="Harga"><input id="stokBaru" type="number" placeholder="Stok"></div>
@@ -48,21 +51,18 @@ table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;colo
 <div class="card" style="padding:0;overflow:hidden">
 <div style="padding:16px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between"><h3 style="margin:0">📦 Daftar Barang</h3><input id="cari" placeholder="🔍 Cari barang..." oninput="render()" style="width:260px;margin:0"></div>
 <table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Foto</th><th>Aksi</th></tr></thead><tbody id="list"></tbody></table>
-<p style="text-align:center;color:#94a3b8;font-size:12px;padding:4px">Ketik harga / stok langsung di tabel, lalu klik SIMPAN</p>
 </div>
 </div></div>
 </div>
 
-<!-- POPUP GANTI PASSWORD -->
-<div class="popup" id="popPass"><div><h3 style="margin:0">🔑 Ganti Password</h3><p style="font-size:12px;color:#64748b">Password baru langsung kepake buat login selanjutnya!</p>
+<div class="popup" id="popPass"><div><h3 style="margin:0">🔑 Ganti Password</h3>
 <input id="passLama" type="password" placeholder="Password lama">
-<input id="passBaru" type="password" placeholder="Password baru, contoh: diks2026">
+<input id="passBaru" type="password" placeholder="Password baru">
 <input id="passBaru2" type="password" placeholder="Ulangi password baru">
-<div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN PASSWORD</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div>
+<div style="display:flex;gap:8px"><button class="btn-merah" style="flex:1" onclick="simpanPassBaru()">💾 SIMPAN</button><button onclick="tutupPass()" style="flex:1;background:#f1f5f9">Batal</button></div>
 <p id="pesanPass" style="color:#dc2626;font-size:13px;text-align:center"></p></div></div>
 
 <script>
-// LOGIN + GANTI PASSWORD - PASSWORD DISIMPAN DI HP/LAPTOP LU, JADI BISA DIGANTI SESUKA HATI
 const USER_BENAR="diks";
 function getPass(){ return localStorage.getItem("passAdminDiks") || "diks12345"; }
 function cekLogin(){ if(localStorage.getItem("loginAdminDiks")==="iya"){document.getElementById("loginBox").style.display="none";document.getElementById("isiAdmin").style.display="block";} }
@@ -72,21 +72,27 @@ function logoutAdmin(){localStorage.removeItem("loginAdminDiks");location.reload
 function bukaGantiPass(){document.getElementById("popPass").style.display="flex";document.getElementById("pesanPass").innerText="";}
 function tutupPass(){document.getElementById("popPass").style.display="none";}
 function simpanPassBaru(){
-  let lama=document.getElementById("passLama").value;
-  let baru=document.getElementById("passBaru").value;
-  let baru2=document.getElementById("passBaru2").value;
+  let lama=document.getElementById("passLama").value;let baru=document.getElementById("passBaru").value;let baru2=document.getElementById("passBaru2").value;
   if(lama!==getPass()){document.getElementById("pesanPass").innerText="Password lama salah!";return;}
   if(baru.length<4){document.getElementById("pesanPass").innerText="Password baru minimal 4 huruf!";return;}
-  if(baru!==baru2){document.getElementById("pesanPass").innerText="Password baru gak sama, cek lagi!";return;}
-  localStorage.setItem("passAdminDiks",baru);
-  alert("BERHASIL! Password baru lu: "+baru+" - Inget ya, jangan sampe lupa!");
-  tutupPass();
+  if(baru!==baru2){document.getElementById("pesanPass").innerText="Password baru gak sama!";return;}
+  localStorage.setItem("passAdminDiks",baru);alert("BERHASIL! Password baru: "+baru);tutupPass();
 }
-
 const firebaseConfig={apiKey:"AIzaSyAAqXyVRJnM3e513tqUzYZISp966tJxWNc",authDomain:"tokodiks.firebaseapp.com",projectId:"tokodiks",storageBucket:"tokodiks.firebasestorage.app",messagingSenderId:"346086365198",appId:"1:346086365198:web:36ef8fc9c107494a31445f"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
 let produk=[]; let kategori=["Makanan","Minuman","Rokok","Sembako"];
 const def=[{nama:"Mie Instan",harga:3500,stok:20,img:"https://via.placeholder.com/200?text=Mie",kat:"Makanan",varian:""},{nama:"Kopi Sachet",harga:2000,stok:20,img:"https://via.placeholder.com/200?text=Kopi",kat:"Minuman",varian:""},{nama:"Rokok",harga:27000,stok:10,img:"https://via.placeholder.com/200?text=Rokok",kat:"Rokok",varian:""}];
+// PROMO - DISIMPAN DI FIREBASE BIAR NYAMBUNG KE TOKO
+db.collection("toko").doc("promo").onSnapshot(doc=>{
+  if(doc.exists){let d=doc.data();document.getElementById("promoInput").value=d.text||"";document.getElementById("promoAktif").checked=d.aktif!==false;}
+  else{document.getElementById("promoInput").value="Beli 2 Mie Instan, Gratis 1 Kopi Sachet!\nGratis Ongkir area dekat!";document.getElementById("promoAktif").checked=true;}
+});
+async function simpanPromo(){
+  let t=document.getElementById("promoInput").value;
+  let a=document.getElementById("promoAktif").checked;
+  await db.collection("toko").doc("promo").set({text:t,aktif:a});
+  alert("PROMO BERHASIL DISIMPAN! Langsung muncul di toko pembeli!");
+}
 db.collection("toko").doc("produk").onSnapshot(doc=>{if(doc.exists){produk=doc.data().list||[];}else{produk=def;db.collection("toko").doc("produk").set({list:def});}let s=new Set(kategori);produk.forEach(p=>{if(p.kat)s.add(p.kat)});kategori=[...s];document.getElementById("status").innerText="✅ Terhubung - "+produk.length+" produk";render();},err=>{document.getElementById("status").innerText="❌ Gagal: "+err.message;});
 async function simpan(p){await db.collection("toko").doc("produk").set({list:produk});if(p)alert(p);}
 function tambahKat(){let k=document.getElementById("katBaru").value.trim();if(!k)return alert("Isi dulu!");if(!kategori.includes(k))kategori.push(k);document.getElementById("katBaru").value="";render();alert("Kategori ditambah!");}
@@ -94,8 +100,7 @@ function tambahBarang(){let n=document.getElementById("namaBaru").value.trim();l
 function render(){
   document.getElementById("listKat").innerHTML=kategori.map(k=>`<span class="chip">${k}</span>`).join("");
   document.getElementById("katPilih").innerHTML=kategori.map(k=>`<option>${k}</option>`).join("");
-  let key=(document.getElementById("cari").value||"").toLowerCase();
-  let html="";
+  let key=(document.getElementById("cari").value||"").toLowerCase();let html="";
   produk.forEach((p,i)=>{
     if(key && !p.nama.toLowerCase().includes(key)) return;
     html+=`<tr><td><div class="produk-info"><img src="${p.img}"><div><b>${p.nama}</b><br><small>${p.varian||"-"}</small></div></div></td>
